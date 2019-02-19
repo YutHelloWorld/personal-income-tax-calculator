@@ -1,4 +1,4 @@
-'use strict';
+
 
 const fs = require('fs');
 const path = require('path');
@@ -96,6 +96,11 @@ module.exports = function(webpackEnv) {
                 flexbox: 'no-2009',
               },
               stage: 3,
+            }),
+            require('postcss-pxtorem')({
+              rootValue: 37.5,
+              propWhiteList: ['*'],
+              selectorBlackList: [],
             }),
           ],
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
