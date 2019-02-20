@@ -16,7 +16,7 @@ const style = theme => ({
 });
 
 function getInsurance(insuranceBase, providentFundBase, checkProvident = true) {
-  return (
+  return +(
     insuranceBase * 0.11 +
     providentFundBase * 0.12 * Number(checkProvident)
   ).toFixed(2);
