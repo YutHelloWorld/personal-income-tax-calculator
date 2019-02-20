@@ -15,6 +15,10 @@ const style = theme => ({
   }
 });
 
+function getInsurance(insuranceBase, providentFundBase) {
+  return (insuranceBase * 0.11 + providentFundBase * 0.12).toFixed(2);
+}
+
 const Text = ({ classes, label, value }) => (
   <span>
     {label}
@@ -26,6 +30,7 @@ class CalYearTax extends Component {
   state = {
     btnDisabled: true,
     monthIncome: '',
+    insurance: '',
     insuranceBase: '',
     minInsuranceBase: 3054.95,
     maxInsuranceBase: 15274.74,
@@ -43,26 +48,56 @@ class CalYearTax extends Component {
     const { value } = event.target;
     this.setState({ [name]: value });
     if (name === 'monthIncome') {
-      this.setState({ btnDisabled: !value });
       this.setState(
         ({
           minInsuranceBase,
           maxInsuranceBase,
           minProvidentFundBase,
           maxProvidentFundBase
-        }) => ({
-          insuranceBase: this.nomarlizeNumber(
+        }) => {
+          const insuranceBase = this.nomarlizeNumber(
             value,
             minInsuranceBase,
             maxInsuranceBase
-          ),
-          providentFundBase: this.nomarlizeNumber(
+          );
+          const providentFundBase = this.nomarlizeNumber(
             value,
             minProvidentFundBase,
             maxProvidentFundBase
-          )
-        })
+          );
+          const insurance = getInsurance(insuranceBase, providentFundBase);
+          return {
+            btnDisabled: !value,
+            insuranceBase,
+            providentFundBase,
+            insurance
+          };
+        }
       );
+    }
+  };
+
+  handleBlur = name => event => {
+    if (name === 'insuranceBase' || name === 'providentFundBase') {
+      this.setState(state => {
+        const _value = this.nomarlizeNumber(
+          state[name],
+          name === 'insuranceBase'
+            ? state.minInsuranceBase
+            : state.minProvidentFundBase,
+          name === 'insuranceBase'
+            ? state.maxInsuranceBase
+            : state.maxProvidentFundBase
+        );
+        const insurance =
+          name === 'insuranceBase'
+            ? getInsurance(_value, state.providentFundBase)
+            : getInsurance(state.insuranceBase, _value);
+        return {
+          [name]: _value,
+          insurance
+        };
+      });
     }
   };
 
@@ -71,6 +106,7 @@ class CalYearTax extends Component {
     const {
       btnDisabled,
       monthIncome,
+      insurance,
       insuranceBase,
       providentFundBase,
       minInsuranceBase,
@@ -100,6 +136,8 @@ class CalYearTax extends Component {
               fullWidth
               helperText="*根据应发工资计算，可手动修改"
               type="number"
+              value={insurance}
+              onChange={this.handleChange('insurance')}
             />
           </Grid>
           <Grid item xs={12}>
@@ -122,6 +160,7 @@ class CalYearTax extends Component {
               }
               type="number"
               onChange={this.handleChange('insuranceBase')}
+              onBlur={this.handleBlur('insuranceBase')}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -130,6 +169,7 @@ class CalYearTax extends Component {
               label="公积金缴纳基数(元)"
               value={providentFundBase}
               onChange={this.handleChange('providentFundBase')}
+              onBlur={this.handleBlur('providentFundBase')}
               fullWidth
               helperText={
                 <Text
