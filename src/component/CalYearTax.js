@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
 import Typography from '@material-ui/core/Typography';
+import find from '../utils/find';
 
 const style = theme => ({
   span: {
@@ -23,6 +24,29 @@ const Text = ({ classes, label, value }) => (
   </span>
 );
 
+function getYearIncomeTax(
+  income,
+  insurance,
+  deduction = 0,
+  threshold = 5000,
+  month = 12
+) {
+  const taxableIncome = (+income - +insurance - deduction - threshold) * month;
+  const aRange = [36000, 144000, 300000, 420000, 660000, 960000];
+  const aTaxRate = [3, 10, 20, 25, 30, 35, 45];
+  const aQuickDeduction = [0, 2520, 16920, 31920, 52920, 85920, 181920];
+  const index = find(aRange, taxableIncome);
+  const taxRate = aTaxRate[index];
+  const quickDeduction = aQuickDeduction[index];
+  const yearTax = ((taxableIncome * taxRate) / 100 - quickDeduction).toFixed(2);
+  return { taxRate, quickDeduction, yearTax };
+}
+
+function nomarlizeNumber(value, min, max) {
+  const _value = +value;
+  return _value >= min ? (_value <= max ? _value : max) : min;
+}
+
 class CalYearTax extends Component {
   state = {
     btnDisabled: true,
@@ -36,10 +60,11 @@ class CalYearTax extends Component {
     maxProvidentFundBase: 24311
   };
 
-  nomarlizeNumber(value, min, max) {
-    const _value = +value;
-    return _value >= min ? (_value <= max ? _value : max) : min;
-  }
+  handleClick = () => {
+    const { monthIncome, insurance } = this.state;
+    const v = getYearIncomeTax(monthIncome, insurance);
+    console.log(v);
+  };
 
   handleChange = name => event => {
     const { value } = event.target;
@@ -52,12 +77,12 @@ class CalYearTax extends Component {
           minProvidentFundBase,
           maxProvidentFundBase
         }) => {
-          const insuranceBase = this.nomarlizeNumber(
+          const insuranceBase = nomarlizeNumber(
             value,
             minInsuranceBase,
             maxInsuranceBase
           );
-          const providentFundBase = this.nomarlizeNumber(
+          const providentFundBase = nomarlizeNumber(
             value,
             minProvidentFundBase,
             maxProvidentFundBase
@@ -77,7 +102,7 @@ class CalYearTax extends Component {
   handleBlur = name => event => {
     if (name === 'insuranceBase' || name === 'providentFundBase') {
       this.setState(state => {
-        const _value = this.nomarlizeNumber(
+        const _value = nomarlizeNumber(
           state[name],
           name === 'insuranceBase'
             ? state.minInsuranceBase
@@ -184,6 +209,7 @@ class CalYearTax extends Component {
               variant="contained"
               fullWidth
               color="primary"
+              onClick={this.handleClick}
             >
               计算
             </Button>
