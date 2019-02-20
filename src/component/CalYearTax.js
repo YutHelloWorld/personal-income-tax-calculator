@@ -7,9 +7,6 @@ import orange from '@material-ui/core/colors/orange';
 import Typography from '@material-ui/core/Typography';
 
 const style = theme => ({
-  button: {
-    // marginTop: theme.spacing.unit * 3,
-  },
   span: {
     color: orange[500]
   }
@@ -181,8 +178,6 @@ class CalYearTax extends Component {
               type="number"
             />
           </Grid>
-          {/* <Grid item xs={12}> */}
-          {/* <Grid container spacing={24} justify="flex-end" alignItems="flex-start"> */}
           <Grid item xs={12} md={3}>
             <Button
               disabled={btnDisabled}
@@ -193,8 +188,6 @@ class CalYearTax extends Component {
               计算
             </Button>
           </Grid>
-          {/* </Grid> */}
-          {/* </Grid> */}
         </Grid>
       </React.Fragment>
     );
