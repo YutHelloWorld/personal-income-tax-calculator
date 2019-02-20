@@ -5,6 +5,8 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
 import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import find from '../utils/find';
 
 const style = theme => ({
@@ -13,8 +15,11 @@ const style = theme => ({
   }
 });
 
-function getInsurance(insuranceBase, providentFundBase) {
-  return (insuranceBase * 0.11 + providentFundBase * 0.12).toFixed(2);
+function getInsurance(insuranceBase, providentFundBase, checkProvident = true) {
+  return (
+    insuranceBase * 0.11 +
+    providentFundBase * 0.12 * Number(checkProvident)
+  ).toFixed(2);
 }
 
 const Text = ({ classes, label, value }) => (
@@ -32,14 +37,18 @@ function getYearIncomeTax(
   month = 12
 ) {
   const taxableIncome = (+income - +insurance - deduction - threshold) * month;
-  const aRange = [36000, 144000, 300000, 420000, 660000, 960000];
-  const aTaxRate = [3, 10, 20, 25, 30, 35, 45];
-  const aQuickDeduction = [0, 2520, 16920, 31920, 52920, 85920, 181920];
+  const aRange = [0, 36000, 144000, 300000, 420000, 660000, 960000];
+  const aTaxRate = [0, 3, 10, 20, 25, 30, 35, 45];
+  const aQuickDeduction = [0, 0, 2520, 16920, 31920, 52920, 85920, 181920];
   const index = find(aRange, taxableIncome);
   const taxRate = aTaxRate[index];
   const quickDeduction = aQuickDeduction[index];
-  const yearTax = ((taxableIncome * taxRate) / 100 - quickDeduction).toFixed(2);
-  return { taxRate, quickDeduction, yearTax };
+  const yearTax = +((taxableIncome * taxRate) / 100 - quickDeduction).toFixed(
+    2
+  );
+  const aferTaxIncome = (+income - +insurance) * 12 - yearTax;
+  const yearIncome = +income * 12;
+  return { taxRate, quickDeduction, yearTax, aferTaxIncome, yearIncome };
 }
 
 function nomarlizeNumber(value, min, max) {
@@ -57,7 +66,8 @@ class CalYearTax extends Component {
     maxInsuranceBase: 15274.74,
     providentFundBase: '',
     minProvidentFundBase: 2010,
-    maxProvidentFundBase: 24311
+    maxProvidentFundBase: 24311,
+    checkProvident: true
   };
 
   handleClick = () => {
@@ -67,6 +77,21 @@ class CalYearTax extends Component {
   };
 
   handleChange = name => event => {
+    if (name === 'checkProvident') {
+      const { checked } = event.target;
+      this.setState(({ insuranceBase, providentFundBase, checkProvident }) => {
+        const insurance = getInsurance(
+          insuranceBase,
+          providentFundBase,
+          checked
+        );
+        return {
+          checkProvident: checked,
+          insurance
+        };
+      });
+      return;
+    }
     const { value } = event.target;
     this.setState({ [name]: value });
     if (name === 'monthIncome') {
@@ -75,7 +100,8 @@ class CalYearTax extends Component {
           minInsuranceBase,
           maxInsuranceBase,
           minProvidentFundBase,
-          maxProvidentFundBase
+          maxProvidentFundBase,
+          checkProvident
         }) => {
           const insuranceBase = nomarlizeNumber(
             value,
@@ -87,7 +113,11 @@ class CalYearTax extends Component {
             minProvidentFundBase,
             maxProvidentFundBase
           );
-          const insurance = getInsurance(insuranceBase, providentFundBase);
+          const insurance = getInsurance(
+            insuranceBase,
+            providentFundBase,
+            checkProvident
+          );
           return {
             btnDisabled: !value,
             insuranceBase,
@@ -113,8 +143,12 @@ class CalYearTax extends Component {
         );
         const insurance =
           name === 'insuranceBase'
-            ? getInsurance(_value, state.providentFundBase)
-            : getInsurance(state.insuranceBase, _value);
+            ? getInsurance(
+                _value,
+                state.providentFundBase,
+                state.checkProvident
+              )
+            : getInsurance(state.insuranceBase, _value, state.checkProvident);
         return {
           [name]: _value,
           insurance
@@ -134,7 +168,8 @@ class CalYearTax extends Component {
       minInsuranceBase,
       maxInsuranceBase,
       minProvidentFundBase,
-      maxProvidentFundBase
+      maxProvidentFundBase,
+      checkProvident
     } = this.state;
     return (
       <React.Fragment>
@@ -162,11 +197,6 @@ class CalYearTax extends Component {
               onChange={this.handleChange('insurance')}
             />
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="caption" color="default">
-              五险一金的缴纳根据缴纳基数计算，缴纳基数一般为个人税前工资。如公司按最低缴纳计算等特殊情况，可以公司人事得知。在下方输入社保和公积金缴纳基数，既可计算五险一金的金额。
-            </Typography>
-          </Grid>
           <Grid item xs={12} md={6}>
             <TextField
               id="insuranceBase"
@@ -193,6 +223,7 @@ class CalYearTax extends Component {
               onChange={this.handleChange('providentFundBase')}
               onBlur={this.handleBlur('providentFundBase')}
               fullWidth
+              disabled={!checkProvident}
               helperText={
                 <Text
                   classes={classes}
@@ -201,6 +232,18 @@ class CalYearTax extends Component {
                 />
               }
               type="number"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="checkProvident"
+                  checked={checkProvident}
+                  onChange={this.handleChange('checkProvident')}
+                />
+              }
+              label="缴纳公积金"
             />
           </Grid>
           <Grid item xs={12} md={3}>
