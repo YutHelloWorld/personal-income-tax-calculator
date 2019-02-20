@@ -97,11 +97,6 @@ module.exports = function(webpackEnv) {
               },
               stage: 3,
             }),
-            require('postcss-pxtorem')({
-              rootValue: 37.5,
-              propWhiteList: ['*'],
-              selectorBlackList: [],
-            }),
           ],
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
         },

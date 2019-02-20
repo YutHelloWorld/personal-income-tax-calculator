@@ -38,7 +38,6 @@
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",
     "postcss-preset-env": "6.5.0",
-    "postcss-pxtorem": "^4.0.1",
     "postcss-safe-parser": "4.0.1",
     "react": "^16.8.2",
     "react-app-polyfill": "^0.2.1",
