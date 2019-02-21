@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
-import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import find from '../utils/find';
@@ -58,7 +57,6 @@ function nomarlizeNumber(value, min, max) {
 
 class CalYearTax extends Component {
   state = {
-    btnDisabled: true,
     monthIncome: '',
     insurance: '',
     insuranceBase: '',
@@ -70,10 +68,13 @@ class CalYearTax extends Component {
     checkProvident: true
   };
 
-  handleClick = () => {
+  handleClick = e => {
     const { monthIncome, insurance } = this.state;
-    const v = getYearIncomeTax(monthIncome, insurance);
-    console.log(v);
+    if (monthIncome && insurance) {
+      e.preventDefault();
+      const v = getYearIncomeTax(monthIncome, insurance);
+      console.log(v);
+    }
   };
 
   handleChange = name => event => {
@@ -119,7 +120,6 @@ class CalYearTax extends Component {
             checkProvident
           );
           return {
-            btnDisabled: !value,
             insuranceBase,
             providentFundBase,
             insurance
@@ -160,7 +160,6 @@ class CalYearTax extends Component {
   render() {
     const { classes } = this.props;
     const {
-      btnDisabled,
       monthIncome,
       insurance,
       insuranceBase,
@@ -172,93 +171,91 @@ class CalYearTax extends Component {
       checkProvident
     } = this.state;
     return (
-      <React.Fragment>
-        <Grid container spacing={24} justify="flex-end">
-          <Grid item xs={12} md={6}>
-            <TextField
-              required
-              id="monthIncome"
-              label="月均工资收入(元)"
-              fullWidth
-              type="number"
-              value={monthIncome}
-              onChange={this.handleChange('monthIncome')}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              required
-              id="insurance"
-              label="五险一金(元)"
-              fullWidth
-              helperText="*根据应发工资计算，可手动修改"
-              type="number"
-              value={insurance}
-              onChange={this.handleChange('insurance')}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="insuranceBase"
-              label="社保缴纳基数(元)"
-              value={insuranceBase}
-              fullWidth
-              helperText={
-                <Text
-                  classes={classes}
-                  label="杭州市社保缴纳基数范围："
-                  value={`${minInsuranceBase}-${maxInsuranceBase}`}
-                />
-              }
-              type="number"
-              onChange={this.handleChange('insuranceBase')}
-              onBlur={this.handleBlur('insuranceBase')}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              id="providentFundBase"
-              label="公积金缴纳基数(元)"
-              value={providentFundBase}
-              onChange={this.handleChange('providentFundBase')}
-              onBlur={this.handleBlur('providentFundBase')}
-              fullWidth
-              disabled={!checkProvident}
-              helperText={
-                <Text
-                  classes={classes}
-                  label="杭州市公积金缴纳基数范围："
-                  value={`${minProvidentFundBase}-${maxProvidentFundBase}`}
-                />
-              }
-              type="number"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value="checkProvident"
-                  checked={checkProvident}
-                  onChange={this.handleChange('checkProvident')}
-                />
-              }
-              label="缴纳公积金"
-            />
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <Button
-              disabled={btnDisabled}
-              variant="contained"
-              fullWidth
-              color="primary"
-              onClick={this.handleClick}
-            >
-              计算
-            </Button>
-          </Grid>
+      <Grid container spacing={24} justify="flex-end" component="form">
+        <Grid item xs={12} md={6}>
+          <TextField
+            required
+            id="monthIncome"
+            label="月均工资收入(元)"
+            fullWidth
+            type="number"
+            value={monthIncome}
+            onChange={this.handleChange('monthIncome')}
+          />
         </Grid>
-      </React.Fragment>
+        <Grid item xs={12} md={6}>
+          <TextField
+            required
+            id="insurance"
+            label="五险一金(元)"
+            fullWidth
+            helperText="*根据应发工资计算，可手动修改"
+            type="number"
+            value={insurance}
+            onChange={this.handleChange('insurance')}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            id="insuranceBase"
+            label="社保缴纳基数(元)"
+            value={insuranceBase}
+            fullWidth
+            helperText={
+              <Text
+                classes={classes}
+                label="杭州市社保缴纳基数范围："
+                value={`${minInsuranceBase}-${maxInsuranceBase}`}
+              />
+            }
+            type="number"
+            onChange={this.handleChange('insuranceBase')}
+            onBlur={this.handleBlur('insuranceBase')}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            id="providentFundBase"
+            label="公积金缴纳基数(元)"
+            value={providentFundBase}
+            onChange={this.handleChange('providentFundBase')}
+            onBlur={this.handleBlur('providentFundBase')}
+            fullWidth
+            disabled={!checkProvident}
+            helperText={
+              <Text
+                classes={classes}
+                label="杭州市公积金缴纳基数范围："
+                value={`${minProvidentFundBase}-${maxProvidentFundBase}`}
+              />
+            }
+            type="number"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value="checkProvident"
+                checked={checkProvident}
+                onChange={this.handleChange('checkProvident')}
+              />
+            }
+            label="缴纳公积金"
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            onClick={this.handleClick}
+            type="submit"
+          >
+            计算
+          </Button>
+        </Grid>
+      </Grid>
     );
   }
 }
