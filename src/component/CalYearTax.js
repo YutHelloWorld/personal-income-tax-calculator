@@ -244,7 +244,7 @@ class CalYearTax extends Component {
             label="缴纳公积金"
           />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4}>
           <Button
             variant="contained"
             fullWidth
