@@ -7,7 +7,12 @@ export function getYearIncomeTax(
   threshold = 5000,
   month = 12
 ) {
-  const taxableIncome = (+income - +insurance - deduction - threshold) * month;
+  const yearIncome = +income * month;
+  const yearDeduction = +((+insurance + deduction + threshold) * month).toFixed(
+    2
+  );
+  const yearInsurance = +(+insurance * month).toFixed(2);
+  const taxableIncome = yearIncome - yearDeduction;
   const aRange = [0, 36000, 144000, 300000, 420000, 660000, 960000];
   const aTaxRate = [0, 3, 10, 20, 25, 30, 35, 45];
   const aQuickDeduction = [0, 0, 2520, 16920, 31920, 52920, 85920, 181920];
@@ -17,9 +22,17 @@ export function getYearIncomeTax(
   const yearTax = +((taxableIncome * taxRate) / 100 - quickDeduction).toFixed(
     2
   );
-  const aferTaxIncome = (+income - +insurance) * 12 - yearTax;
-  const yearIncome = +income * 12;
-  return { taxRate, quickDeduction, yearTax, aferTaxIncome, yearIncome };
+  const aferTaxIncome = +((+income - +insurance) * month - yearTax).toFixed(2);
+
+  return {
+    taxRate,
+    quickDeduction,
+    yearTax,
+    aferTaxIncome,
+    yearIncome,
+    yearDeduction,
+    yearInsurance
+  };
 }
 
 export function getInsurance(

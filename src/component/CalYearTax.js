@@ -40,9 +40,11 @@ class CalYearTax extends Component {
     const { monthIncome, insurance } = this.state;
     if (monthIncome && insurance) {
       e.preventDefault();
-      const v = getYearIncomeTax(monthIncome, insurance);
-      console.log(v);
-      this.props.history.push('/result');
+      const oTax = getYearIncomeTax(monthIncome, insurance);
+      this.props.history.push({
+        pathname: '/result',
+        state: oTax
+      });
     }
   };
 

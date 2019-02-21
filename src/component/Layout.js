@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -58,39 +57,36 @@ class Layout extends Component {
   render() {
     const { classes, theme, matchesDwonSm } = this.props;
     return (
-      <React.Fragment>
-        <CssBaseline />
-        <div className={classes.root}>
-          <AppBar position="static" color="default">
-            <Tabs
-              value={this.state.value}
-              onChange={this.handleChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant={matchesDwonSm ? 'fullWidth' : 'standard'}
-            >
-              <Tab label="年度个税" />
-              <Tab label="年终奖" />
-            </Tabs>
-          </AppBar>
-          <SwipeableViews
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={this.state.value}
-            onChangeIndex={this.handleChangeIndex}
+      <div className={classes.root}>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={this.state.value}
+            onChange={this.handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant={matchesDwonSm ? 'fullWidth' : 'standard'}
           >
-            <main className={classes.layout}>
-              <Paper className={classes.paper} elevation={2}>
-                <CalYearTax />
-              </Paper>
-            </main>
-            <main className={classes.layout}>
-              <Paper className={classes.paper} elevation={2}>
-                <YearEndBonus />
-              </Paper>
-            </main>
-          </SwipeableViews>
-        </div>
-      </React.Fragment>
+            <Tab label="年度个税" />
+            <Tab label="年终奖" />
+          </Tabs>
+        </AppBar>
+        <SwipeableViews
+          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+          index={this.state.value}
+          onChangeIndex={this.handleChangeIndex}
+        >
+          <main className={classes.layout}>
+            <Paper className={classes.paper} elevation={2}>
+              <CalYearTax />
+            </Paper>
+          </main>
+          <main className={classes.layout}>
+            <Paper className={classes.paper} elevation={2}>
+              <YearEndBonus />
+            </Paper>
+          </main>
+        </SwipeableViews>
+      </div>
     );
   }
 }
