@@ -1,24 +1,27 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { ThemeProvider, useTheme } from '@material-ui/styles';
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import { createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Layout from './component/Layout';
-import Result from './component/Result';
 import ScrollToTop from './component/ScrollToTop';
+const Result = lazy(() => import('./component/Result'));
 
 function App() {
   const theme = useTheme();
   const matchesDwonSm = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <Switch>
-      <Route
-        exact
-        path="/"
-        render={() => <Layout matchesDwonSm={matchesDwonSm} />}
-      />
-      <Route path="/result" component={Result} />
+      <Suspense fallback={<LinearProgress />}>
+        <Route
+          exact
+          path="/"
+          render={() => <Layout matchesDwonSm={matchesDwonSm} />}
+        />
+        <Route path="/result" render={props => <Result {...props} />} />
+      </Suspense>
     </Switch>
   );
 }
@@ -29,7 +32,7 @@ export default function ThemeHelper() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router basename="/personal-income-tax-calculator/">
+      <Router>
         <ScrollToTop>
           <App />
         </ScrollToTop>
