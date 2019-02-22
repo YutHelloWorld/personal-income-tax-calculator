@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@material-ui/core/Typography';
 import { withRouter } from 'react-router-dom';
 import nomarlizeNumber from '../utils/normalizeNumber';
 import { getYearIncomeTax, getInsurance } from '../utils/tax';
@@ -166,6 +167,21 @@ class CalYearTax extends Component {
             onChange={this.handleChange('insurance')}
           />
         </Grid>
+        <Grid item xs={12}>
+          <Typography variant="caption">
+            五险一金的缴纳根据缴纳基数计算，缴纳基数一般为个人税前工资。
+          </Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                value="checkProvident"
+                checked={checkProvident}
+                onChange={this.handleChange('checkProvident')}
+              />
+            }
+            label="是否缴纳公积金"
+          />
+        </Grid>
         <Grid item xs={12} md={6}>
           <TextField
             id="insuranceBase"
@@ -201,18 +217,6 @@ class CalYearTax extends Component {
               />
             }
             type="number"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                value="checkProvident"
-                checked={checkProvident}
-                onChange={this.handleChange('checkProvident')}
-              />
-            }
-            label="缴纳公积金"
           />
         </Grid>
         <Grid item xs={12} md={4}>
