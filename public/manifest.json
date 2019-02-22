@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "个税计算器",
+  "name": "2019最新个税计算器",
   "icons": [
     {
       "src": "favicon.ico",
