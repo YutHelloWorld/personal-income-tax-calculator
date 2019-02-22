@@ -162,7 +162,13 @@ class Result extends Component {
           >
             <Grid item>
               <Typography variant="caption" gutterBottom>
-                年度个税(元)
+                {state.yearDeduction ? '年度税前(元)' : '税前收入(元)'}
+              </Typography>
+              <Typography variant="subtitle2">{state.income}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="caption" gutterBottom>
+                {state.yearDeduction ? '年度个税(元)' : '应纳个税(元)'}
               </Typography>
               <Typography variant="subtitle2" color="secondary">
                 {state.tax}
@@ -170,13 +176,7 @@ class Result extends Component {
             </Grid>
             <Grid item>
               <Typography variant="caption" gutterBottom>
-                年度税前(元)
-              </Typography>
-              <Typography variant="subtitle2">{state.income}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="caption" gutterBottom>
-                年度税后(元)
+                {state.yearDeduction ? '年度税后(元)' : '税后收入(元)'}
               </Typography>
               <Typography variant="subtitle2" color="primary">
                 {state.afterTax}
@@ -211,7 +211,7 @@ class Result extends Component {
           计算详情
         </Typography>
         <Typography className={classes.fomular} variant="overline">
-          {state.deduction
+          {state.yearDeduction
             ? '年度个税 = （累计税前 - 累计五险一金 - 累计专项附加扣除 - 累计减除费用）× 税率 - 速算扣除数'
             : '个税 = 税前 x 税率 - 速算扣除数'}
         </Typography>
@@ -220,14 +220,14 @@ class Result extends Component {
             <ListItemText
               primary={
                 <Typography variant="caption">
-                  {state.deduction
+                  {state.yearDeduction
                     ? '(累计税前-累计五险一金-累计专项扣除-累计减除费用)'
                     : '税前'}
                 </Typography>
               }
             />
             <Typography>
-              {state.deduction
+              {state.yearDeduction
                 ? (state.income - state.yearDeduction).toFixed(2)
                 : state.income}
             </Typography>
@@ -252,8 +252,10 @@ class Result extends Component {
           </ListItem>
         </List>
         <Typography variant="button" className={classes.detail}>
-          {state.deduction ? '年度个人所得税税率表' : '年终奖个人所得税率表'}
-          {!state.deduction && (
+          {state.yearDeduction
+            ? '年度个人所得税税率表'
+            : '年终奖个人所得税率表'}
+          {!state.yearDeduction && (
             <Typography variant="caption" inline>
               （* 年终奖/12获得税率和速算数）
             </Typography>
@@ -280,7 +282,7 @@ class Result extends Component {
             ))}
           </TableBody>
         </Table>
-        {!state.deduction && (
+        {!state.yearDeduction && (
           <Typography variant="caption" className={classes.divider}>
             年终奖所得，将年终奖金额除以12个月，以每月平均收入金额来确定税率和速算扣除数
           </Typography>
