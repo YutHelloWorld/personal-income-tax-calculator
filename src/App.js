@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Layout from './component/Layout';
 import Result from './component/Result';
+import ScrollToTop from './component/ScrollToTop';
 
 function App() {
   const theme = useTheme();
@@ -29,7 +30,9 @@ export default function ThemeHelper() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router basename="/personal-income-tax-calculator/">
-        <Route component={App} />
+        <ScrollToTop>
+          <App />
+        </ScrollToTop>
       </Router>
     </ThemeProvider>
   );
