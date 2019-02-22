@@ -2,6 +2,7 @@
   "name": "tax-cal",
   "version": "0.1.0",
   "private": true,
+  "homepage" : "http://yuthelloworld.github.io/personal-income-tax-calculator",
   "dependencies": {
     "@babel/core": "7.2.2",
     "@material-ui/core": "^3.9.2",
