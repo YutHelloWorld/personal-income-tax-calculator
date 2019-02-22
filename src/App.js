@@ -32,7 +32,7 @@ export default function ThemeHelper() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
+      <Router basename="/personal-income-tax-calculator/">
         <ScrollToTop>
           <App />
         </ScrollToTop>
