@@ -7,6 +7,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import { withRouter } from 'react-router-dom';
+import { getBonusTax } from '../utils/tax';
 
 const style = theme => ({});
 
@@ -21,16 +23,27 @@ class YearEndBonus extends Component {
   };
 
   state = {
-    mode: 'forward'
+    mode: 'forward',
+    bonus: ''
   };
 
   handleChange = name => e => {
     this.setState({ [name]: e.target.value });
   };
 
-  handleClick = e => {};
+  handleClick = e => {
+    const { bonus, mode } = this.state;
+    if (bonus) {
+      e.preventDefault();
+      this.props.history.push({
+        pathname: '/result',
+        state: getBonusTax(+bonus, mode === 'forward')
+      });
+    }
+  };
+
   render() {
-    const { mode } = this.state;
+    const { mode, bonus } = this.state;
     return (
       <Grid container spacing={24} component="form" justify="flex-end">
         <Grid item xs={12}>
@@ -59,6 +72,8 @@ class YearEndBonus extends Component {
             label={aModeText[mode]}
             fullWidth
             type="number"
+            value={bonus}
+            onChange={this.handleChange('bonus')}
           />
         </Grid>
         <Grid item xs={12} md={4}>
@@ -76,4 +91,4 @@ class YearEndBonus extends Component {
     );
   }
 }
-export default withStyles(style)(YearEndBonus);
+export default withRouter(withStyles(style)(YearEndBonus));

@@ -212,7 +212,7 @@ class CalYearTax extends Component {
                 onChange={this.handleChange('checkProvident')}
               />
             }
-            label="是否缴纳公积金"
+            label="缴纳公积金"
           />
         </Grid>
         <Grid item xs={12} md={4}>

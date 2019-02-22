@@ -105,6 +105,16 @@ const rows = [
   createData(0, 960, 45, 181920)
 ];
 
+const rows2 = [
+  createData(3, 0, 3, 0),
+  createData(3, 12, 10, 210),
+  createData(12, 25, 20, 1410),
+  createData(25, 35, 25, 2660),
+  createData(35, 55, 30, 4410),
+  createData(55, 80, 35, 7160),
+  createData(0, 80, 45, 15160)
+];
+
 const CustomTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.primary.light,
@@ -131,15 +141,7 @@ class Result extends Component {
       classes,
       location: { state = {} }
     } = this.props;
-    const {
-      yearTax,
-      yearIncome,
-      yearDeduction,
-      yearInsurance,
-      aferTaxIncome,
-      taxRate,
-      quickDeduction
-    } = state;
+    const data = state.yearDeduction ? rows : rows2;
     return (
       <main className={classes.root}>
         <div className={classes.fabContainer}>
@@ -163,97 +165,112 @@ class Result extends Component {
                 年度个税(元)
               </Typography>
               <Typography variant="subtitle2" color="secondary">
-                {yearTax}
+                {state.tax}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="caption" gutterBottom>
                 年度税前(元)
               </Typography>
-              <Typography variant="subtitle2">{yearIncome}</Typography>
+              <Typography variant="subtitle2">{state.income}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="caption" gutterBottom>
                 年度税后(元)
               </Typography>
               <Typography variant="subtitle2" color="primary">
-                {aferTaxIncome}
+                {state.afterTax}
               </Typography>
             </Grid>
           </Grid>
-          <Divider className={classes.divider} />
-          <List disablePadding>
-            <ListItem className={classes.listItem}>
-              <ListItemText
-                primary={
-                  <Typography variant="caption">起征点(减除费用)</Typography>
-                }
-              />
-              <Typography>60000</Typography>
-            </ListItem>
-            <ListItem className={classes.listItem}>
-              <ListItemText
-                primary={
-                  <Typography variant="caption">
-                    五险一金(个人缴纳部分)
-                  </Typography>
-                }
-              />
-              <Typography>{yearInsurance}</Typography>
-            </ListItem>
-          </List>
+          {state.yearDeduction && <Divider className={classes.divider} />}
+          {state.yearDeduction && (
+            <List disablePadding>
+              <ListItem className={classes.listItem}>
+                <ListItemText
+                  primary={
+                    <Typography variant="caption">起征点(减除费用)</Typography>
+                  }
+                />
+                <Typography>60000</Typography>
+              </ListItem>
+              <ListItem className={classes.listItem}>
+                <ListItemText
+                  primary={
+                    <Typography variant="caption">
+                      五险一金(个人缴纳部分)
+                    </Typography>
+                  }
+                />
+                <Typography>{state.yearInsurance}</Typography>
+              </ListItem>
+            </List>
+          )}
         </Paper>
         <Typography variant="button" className={classes.detail}>
           计算详情
         </Typography>
         <Typography className={classes.fomular} variant="overline">
-          年度个税= （累计税前 - 累计五险一金 - 累计专项附加扣除 -
-          累计减除费用）× 税率 - 速算扣除数
+          {state.deduction
+            ? '年度个税 = （累计税前 - 累计五险一金 - 累计专项附加扣除 - 累计减除费用）× 税率 - 速算扣除数'
+            : '个税 = 税前 x 税率 - 速算扣除数'}
         </Typography>
         <List>
           <ListItem>
             <ListItemText
               primary={
                 <Typography variant="caption">
-                  (累计税前-累计五险一金-累计专项扣除-累计减除费用)
+                  {state.deduction
+                    ? '(累计税前-累计五险一金-累计专项扣除-累计减除费用)'
+                    : '税前'}
                 </Typography>
               }
             />
-            <Typography>{(yearIncome - yearDeduction).toFixed(2)}</Typography>
+            <Typography>
+              {state.deduction
+                ? (state.income - state.yearDeduction).toFixed(2)
+                : state.income}
+            </Typography>
           </ListItem>
           <ListItem>
             <ListItemText
               primary={<Typography variant="caption">税率</Typography>}
             />
-            <Typography>{`×${taxRate}%`}</Typography>
+            <Typography>{`×${state.taxRate}%`}</Typography>
           </ListItem>
           <ListItem divider>
             <ListItemText
               primary={<Typography variant="caption">速算扣除数</Typography>}
             />
-            <Typography>-{quickDeduction}</Typography>
+            <Typography>-{state.quickDeduction}</Typography>
           </ListItem>
           <ListItem>
             <ListItemText
               primary={<Typography variant="caption">个税</Typography>}
             />
-            <Typography>{yearTax}</Typography>
+            <Typography>{state.tax}</Typography>
           </ListItem>
         </List>
         <Typography variant="button" className={classes.detail}>
-          年度个人所得税税率表
+          {state.deduction ? '年度个人所得税税率表' : '年终奖个人所得税率表'}
+          {!state.deduction && (
+            <Typography variant="caption" inline>
+              （* 年终奖/12获得税率和速算数）
+            </Typography>
+          )}
         </Typography>
+
         <Table padding="none">
           <TableHead>
             <TableRow className={classes.tableRow}>
               <CustomTableCell>级数</CustomTableCell>
-              <CustomTableCell>累计预扣预缴应纳税所得额</CustomTableCell>
+              <CustomTableCell>应纳税所得额</CustomTableCell>
               <CustomTableCell>税率(%)</CustomTableCell>
               <CustomTableCell>速算扣除数</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map(row => (
+            {data.map(row => (
               <TableRow key={row.id} className={classes.tableRow}>
                 <CustomTableCell>{row.id}</CustomTableCell>
                 <CustomTableCell>{row.income}</CustomTableCell>
@@ -263,6 +280,11 @@ class Result extends Component {
             ))}
           </TableBody>
         </Table>
+        {!state.deduction && (
+          <Typography variant="caption" className={classes.divider}>
+            年终奖所得，将年终奖金额除以12个月，以每月平均收入金额来确定税率和速算扣除数
+          </Typography>
+        )}
       </main>
     );
   }
