@@ -11,11 +11,17 @@ import Divider from '@material-ui/core/Divider';
 import orange from '@material-ui/core/colors/orange';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Fab from '@material-ui/core/Fab';
 import Icon from '@material-ui/core/Icon';
+import Dialog from '@material-ui/core/Dialog';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import { RANGE, MONTH_RANGE } from '../constant';
+import CustomTableCell from './CustomTableCell';
+import Transition from './Transition';
 
 const styles = theme => ({
   root: {
@@ -55,6 +61,9 @@ const styles = theme => ({
       padding: theme.spacing.unit * 3
     }
   },
+  button: {
+    margin: `${theme.spacing.unit}px auto`
+  },
   grid: {
     textAlign: 'center'
   },
@@ -81,73 +90,35 @@ const styles = theme => ({
     }
   }
 });
-let id = 0;
-function createData(minIncome, maxIncome, taxRate, deduction) {
-  id += 1;
-  let income;
-  if (!minIncome) {
-    income = `超过${maxIncome},000的部分`;
-  } else if (!maxIncome) {
-    income = `不超过${minIncome},000的部分`;
-  } else {
-    income = `超过${minIncome},000至${maxIncome},000的部分`;
-  }
-  return { id, income, taxRate, deduction };
-}
-
-const range = [
-  createData(36, 0, 3, 0),
-  createData(36, 144, 10, 2520),
-  createData(144, 300, 20, 16920),
-  createData(300, 420, 25, 31920),
-  createData(420, 660, 30, 52920),
-  createData(660, 960, 35, 85920),
-  createData(0, 960, 45, 181920)
-];
-
-const monthRange = [
-  createData(3, 0, 3, 0),
-  createData(3, 12, 10, 210),
-  createData(12, 25, 20, 1410),
-  createData(25, 35, 25, 2660),
-  createData(35, 55, 30, 4410),
-  createData(55, 80, 35, 7160),
-  createData(0, 80, 45, 15160)
-];
-
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-    textAlign: 'center'
-  },
-  body: {
-    fontSize: 12,
-    textAlign: 'center'
-  }
-}))(TableCell);
 
 class Result extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
+    fullScreen: PropTypes.bool.isRequired
   };
 
   state = {
-    type: this.props.location.state ? this.props.location.state.type : 0
+    open: false
   };
-
   handleClick = () => {
     this.props.history.push('/');
   };
 
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleOpen = () => {
+    this.setState({ open: true });
+  };
   render() {
-    const {
-      classes,
-      location: { state = {} }
-    } = this.props;
-    const { type } = this.state;
-    const data = type === 1 ? range : monthRange;
+    const { classes, fullScreen } = this.props;
+    const { type, result } = this.props.location.state || {
+      type: 0,
+      result: {}
+    };
+    const data = type === 1 ? RANGE : MONTH_RANGE;
     return (
       <main className={classes.root}>
         <div className={classes.fabContainer}>
@@ -170,14 +141,14 @@ class Result extends Component {
               <Typography variant="caption" gutterBottom>
                 {type === 1 ? '年度税前(元)' : '税前收入(元)'}
               </Typography>
-              <Typography variant="subtitle2">{state.income}</Typography>
+              <Typography variant="subtitle2">{result.income}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="caption" gutterBottom>
                 {type === 1 ? '年度个税(元)' : '应纳个税(元)'}
               </Typography>
               <Typography variant="subtitle2" color="secondary">
-                {state.tax}
+                {result.tax}
               </Typography>
             </Grid>
             <Grid item>
@@ -185,34 +156,81 @@ class Result extends Component {
                 {type === 1 ? '年度税后(元)' : '税后收入(元)'}
               </Typography>
               <Typography variant="subtitle2" color="primary">
-                {state.afterTax}
+                {result.afterTax}
               </Typography>
             </Grid>
           </Grid>
-          {type === 1 && <Divider className={classes.divider} />}
           {type === 1 && (
-            <List disablePadding>
-              <ListItem className={classes.listItem}>
-                <ListItemText
-                  primary={
-                    <Typography variant="caption">起征点(减除费用)</Typography>
-                  }
-                />
-                <Typography>60000</Typography>
-              </ListItem>
-              <ListItem className={classes.listItem}>
-                <ListItemText
-                  primary={
-                    <Typography variant="caption">
-                      五险一金(个人缴纳部分)
-                    </Typography>
-                  }
-                />
-                <Typography>{state.totalInsurance}</Typography>
-              </ListItem>
-            </List>
+            <React.Fragment>
+              <Divider className={classes.divider} />
+
+              <List disablePadding>
+                <ListItem className={classes.listItem}>
+                  <ListItemText
+                    primary={
+                      <Typography variant="caption">
+                        起征点(减除费用)
+                      </Typography>
+                    }
+                  />
+                  <Typography>60000</Typography>
+                </ListItem>
+                <ListItem className={classes.listItem}>
+                  <ListItemText
+                    primary={
+                      <Typography variant="caption">
+                        五险一金(个人缴纳部分)
+                      </Typography>
+                    }
+                  />
+                  <Typography>{result.totalInsurance}</Typography>
+                </ListItem>
+              </List>
+              <Button variant="text" color="primary" onClick={this.handleOpen}>
+                <Icon>list</Icon>
+                查看每月收入明细
+              </Button>
+            </React.Fragment>
           )}
         </Paper>
+        {type === 1 && (
+          <Dialog
+            fullScreen={fullScreen}
+            fullWidth
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby="month-tax"
+            TransitionComponent={Transition}
+          >
+            <Table padding="none">
+              <TableHead>
+                <TableRow className={classes.tableRow}>
+                  <CustomTableCell>月份</CustomTableCell>
+                  <CustomTableCell>税前(元)</CustomTableCell>
+                  <CustomTableCell>当月个税(元)</CustomTableCell>
+                  <CustomTableCell>税后收入</CustomTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {result.aMonthTax.map((row, idx) => (
+                  <TableRow key={idx} className={classes.tableRow}>
+                    <CustomTableCell>{`${idx + 1}月`}</CustomTableCell>
+                    <CustomTableCell>{row.income}</CustomTableCell>
+                    <CustomTableCell>{row.tax}</CustomTableCell>
+                    <CustomTableCell>{row.afterTax}</CustomTableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <IconButton
+              color="primary"
+              onClick={this.handleClose}
+              className={classes.button}
+            >
+              <Icon>highlight_off</Icon>
+            </IconButton>
+          </Dialog>
+        )}
         <Typography variant="button" className={classes.detail}>
           计算详情
         </Typography>
@@ -234,27 +252,27 @@ class Result extends Component {
             />
             <Typography>
               {type === 1
-                ? (state.income - state.totalDeduction).toFixed(2)
-                : state.income}
+                ? (result.income - result.totalDeduction).toFixed(2)
+                : result.income}
             </Typography>
           </ListItem>
           <ListItem>
             <ListItemText
               primary={<Typography variant="caption">税率</Typography>}
             />
-            <Typography>{`×${state.taxRate}%`}</Typography>
+            <Typography>{`×${result.taxRate}%`}</Typography>
           </ListItem>
           <ListItem divider>
             <ListItemText
               primary={<Typography variant="caption">速算扣除数</Typography>}
             />
-            <Typography>-{state.quickDeduction}</Typography>
+            <Typography>-{result.quickDeduction}</Typography>
           </ListItem>
           <ListItem>
             <ListItemText
               primary={<Typography variant="caption">个税</Typography>}
             />
-            <Typography>{state.tax}</Typography>
+            <Typography>{result.tax}</Typography>
           </ListItem>
         </List>
         <Typography variant="button" className={classes.detail}>
@@ -296,4 +314,6 @@ class Result extends Component {
   }
 }
 
-export default withStyles(styles)(Result);
+export default withMobileDialog({ breakpoint: 'xs' })(
+  withStyles(styles)(Result)
+);

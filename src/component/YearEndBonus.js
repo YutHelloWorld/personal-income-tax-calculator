@@ -37,7 +37,7 @@ class YearEndBonus extends Component {
       e.preventDefault();
       this.props.history.push({
         pathname: '/result',
-        state: getBonusTax(+bonus, mode === 'forward')
+        state: { result: getBonusTax(+bonus, mode === 'forward'), type: 2 }
       });
     }
   };

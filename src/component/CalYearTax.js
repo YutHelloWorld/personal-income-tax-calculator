@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -24,6 +25,10 @@ const Text = ({ classes, label, value }) => (
 );
 
 class CalYearTax extends Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  };
+
   state = {
     monthIncome: '',
     insurance: '',
@@ -41,9 +46,35 @@ class CalYearTax extends Component {
     if (monthIncome && insurance) {
       e.preventDefault();
       const oTax = getIncomeTax(monthIncome, insurance);
+      const aMonthTax = new Array(12).fill(1).map((value, idx) => {
+        // 1月数据单算
+        if (!idx) {
+          const { tax: t, income: i, afterTax: a } = getIncomeTax(
+            monthIncome,
+            insurance,
+            1
+          );
+          return {
+            tax: t,
+            income: i,
+            afterTax: a
+          };
+        }
+        // 当月 - 上月
+        const current = getIncomeTax(monthIncome, insurance, idx + 1);
+        const prev = getIncomeTax(monthIncome, insurance, idx);
+        const tax = +(current.tax - prev.tax).toFixed(2);
+        const income = +monthIncome;
+        const afterTax = +(income - tax - +insurance).toFixed(2);
+        return {
+          tax,
+          income,
+          afterTax
+        };
+      });
       this.props.history.push({
         pathname: '/result',
-        state: { ...oTax, type: 1 }
+        state: { result: { ...oTax, aMonthTax, insurance }, type: 1 }
       });
     }
   };
