@@ -86,7 +86,7 @@ function createData(minIncome, maxIncome, taxRate, deduction) {
   id += 1;
   let income;
   if (!minIncome) {
-    income = `超过${maxIncome},0000的部分`;
+    income = `超过${maxIncome},000的部分`;
   } else if (!maxIncome) {
     income = `不超过${minIncome},000的部分`;
   } else {
@@ -95,7 +95,7 @@ function createData(minIncome, maxIncome, taxRate, deduction) {
   return { id, income, taxRate, deduction };
 }
 
-const rows = [
+const range = [
   createData(36, 0, 3, 0),
   createData(36, 144, 10, 2520),
   createData(144, 300, 20, 16920),
@@ -105,7 +105,7 @@ const rows = [
   createData(0, 960, 45, 181920)
 ];
 
-const rows2 = [
+const monthRange = [
   createData(3, 0, 3, 0),
   createData(3, 12, 10, 210),
   createData(12, 25, 20, 1410),
@@ -133,15 +133,21 @@ class Result extends Component {
     location: PropTypes.object.isRequired
   };
 
+  state = {
+    type: this.props.location.state ? this.props.location.state.type : 0
+  };
+
   handleClick = () => {
     this.props.history.push('/');
   };
+
   render() {
     const {
       classes,
       location: { state = {} }
     } = this.props;
-    const data = state.yearDeduction ? rows : rows2;
+    const { type } = this.state;
+    const data = type === 1 ? range : monthRange;
     return (
       <main className={classes.root}>
         <div className={classes.fabContainer}>
@@ -162,13 +168,13 @@ class Result extends Component {
           >
             <Grid item>
               <Typography variant="caption" gutterBottom>
-                {state.yearDeduction ? '年度税前(元)' : '税前收入(元)'}
+                {type === 1 ? '年度税前(元)' : '税前收入(元)'}
               </Typography>
               <Typography variant="subtitle2">{state.income}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="caption" gutterBottom>
-                {state.yearDeduction ? '年度个税(元)' : '应纳个税(元)'}
+                {type === 1 ? '年度个税(元)' : '应纳个税(元)'}
               </Typography>
               <Typography variant="subtitle2" color="secondary">
                 {state.tax}
@@ -176,15 +182,15 @@ class Result extends Component {
             </Grid>
             <Grid item>
               <Typography variant="caption" gutterBottom>
-                {state.yearDeduction ? '年度税后(元)' : '税后收入(元)'}
+                {type === 1 ? '年度税后(元)' : '税后收入(元)'}
               </Typography>
               <Typography variant="subtitle2" color="primary">
                 {state.afterTax}
               </Typography>
             </Grid>
           </Grid>
-          {state.yearDeduction && <Divider className={classes.divider} />}
-          {state.yearDeduction && (
+          {type === 1 && <Divider className={classes.divider} />}
+          {type === 1 && (
             <List disablePadding>
               <ListItem className={classes.listItem}>
                 <ListItemText
@@ -202,7 +208,7 @@ class Result extends Component {
                     </Typography>
                   }
                 />
-                <Typography>{state.yearInsurance}</Typography>
+                <Typography>{state.totalInsurance}</Typography>
               </ListItem>
             </List>
           )}
@@ -211,7 +217,7 @@ class Result extends Component {
           计算详情
         </Typography>
         <Typography className={classes.fomular} variant="overline">
-          {state.yearDeduction
+          {type === 1
             ? '年度个税 = （累计税前 - 累计五险一金 - 累计专项附加扣除 - 累计减除费用）× 税率 - 速算扣除数'
             : '个税 = 税前 x 税率 - 速算扣除数'}
         </Typography>
@@ -220,15 +226,15 @@ class Result extends Component {
             <ListItemText
               primary={
                 <Typography variant="caption">
-                  {state.yearDeduction
+                  {type === 1
                     ? '(累计税前-累计五险一金-累计专项扣除-累计减除费用)'
                     : '税前'}
                 </Typography>
               }
             />
             <Typography>
-              {state.yearDeduction
-                ? (state.income - state.yearDeduction).toFixed(2)
+              {type === 1
+                ? (state.income - state.totalDeduction).toFixed(2)
                 : state.income}
             </Typography>
           </ListItem>
@@ -252,10 +258,8 @@ class Result extends Component {
           </ListItem>
         </List>
         <Typography variant="button" className={classes.detail}>
-          {state.yearDeduction
-            ? '年度个人所得税税率表'
-            : '年终奖个人所得税率表'}
-          {!state.yearDeduction && (
+          {type === 1 ? '年度个人所得税税率表' : '年终奖个人所得税率表'}
+          {!type === 1 && (
             <Typography variant="caption" inline>
               （* 年终奖/12获得税率和速算数）
             </Typography>
@@ -282,7 +286,7 @@ class Result extends Component {
             ))}
           </TableBody>
         </Table>
-        {!state.yearDeduction && (
+        {!type === 1 && (
           <Typography variant="caption" className={classes.divider}>
             年终奖所得，将年终奖金额除以12个月，以每月平均收入金额来确定税率和速算扣除数
           </Typography>

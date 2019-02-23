@@ -8,7 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { withRouter } from 'react-router-dom';
 import nomarlizeNumber from '../utils/normalizeNumber';
-import { getYearIncomeTax, getInsurance } from '../utils/tax';
+import { getIncomeTax, getInsurance } from '../utils/tax';
 
 const style = theme => ({
   span: {
@@ -40,10 +40,10 @@ class CalYearTax extends Component {
     const { monthIncome, insurance } = this.state;
     if (monthIncome && insurance) {
       e.preventDefault();
-      const oTax = getYearIncomeTax(monthIncome, insurance);
+      const oTax = getIncomeTax(monthIncome, insurance);
       this.props.history.push({
         pathname: '/result',
-        state: oTax
+        state: { ...oTax, type: 1 }
       });
     }
   };

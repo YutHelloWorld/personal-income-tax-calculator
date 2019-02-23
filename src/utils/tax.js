@@ -1,18 +1,19 @@
 import find from './find';
 
-export function getYearIncomeTax(
+export function getIncomeTax(
   income,
   insurance,
+  month = 12,
   deduction = 0,
-  threshold = 5000,
-  month = 12
+  threshold = 5000
 ) {
-  const yearIncome = +income * month;
-  const yearDeduction = +((+insurance + deduction + threshold) * month).toFixed(
-    2
-  );
-  const yearInsurance = +(+insurance * month).toFixed(2);
-  const taxableIncome = yearIncome - yearDeduction;
+  const totalIncome = +income * month;
+  const totalDeduction = +(
+    (+insurance + deduction + threshold) *
+    month
+  ).toFixed(2);
+  const totalInsurance = +(+insurance * month).toFixed(2);
+  const taxableIncome = totalIncome - totalDeduction;
   const aRange = [0, 36000, 144000, 300000, 420000, 660000, 960000];
   const aTaxRate = [0, 3, 10, 20, 25, 30, 35, 45];
   const aQuickDeduction = [0, 0, 2520, 16920, 31920, 52920, 85920, 181920];
@@ -27,9 +28,9 @@ export function getYearIncomeTax(
     quickDeduction,
     tax,
     afterTax,
-    income: yearIncome,
-    yearDeduction,
-    yearInsurance
+    income: totalIncome,
+    totalDeduction,
+    totalInsurance
   };
 }
 
