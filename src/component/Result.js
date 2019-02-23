@@ -208,7 +208,8 @@ class Result extends Component {
                   <CustomTableCell>月份</CustomTableCell>
                   <CustomTableCell>税前(元)</CustomTableCell>
                   <CustomTableCell>当月个税(元)</CustomTableCell>
-                  <CustomTableCell>税后收入</CustomTableCell>
+                  <CustomTableCell>五险一金(元)</CustomTableCell>
+                  <CustomTableCell>税后收入(元)</CustomTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -217,6 +218,7 @@ class Result extends Component {
                     <CustomTableCell>{`${idx + 1}月`}</CustomTableCell>
                     <CustomTableCell>{row.income}</CustomTableCell>
                     <CustomTableCell>{row.tax}</CustomTableCell>
+                    <CustomTableCell>{result.insurance}</CustomTableCell>
                     <CustomTableCell>{row.afterTax}</CustomTableCell>
                   </TableRow>
                 ))}
