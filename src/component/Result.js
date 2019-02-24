@@ -279,7 +279,7 @@ class Result extends Component {
         </List>
         <Typography variant="button" className={classes.detail}>
           {type === 1 ? '年度个人所得税税率表' : '年终奖个人所得税率表'}
-          {!type === 1 && (
+          {type !== 1 && (
             <Typography variant="caption" inline>
               （* 年终奖/12获得税率和速算数）
             </Typography>
@@ -306,7 +306,7 @@ class Result extends Component {
             ))}
           </TableBody>
         </Table>
-        {!type === 1 && (
+        {type !== 1 && (
           <Typography variant="caption" className={classes.divider}>
             年终奖所得，将年终奖金额除以12个月，以每月平均收入金额来确定税率和速算扣除数
           </Typography>
