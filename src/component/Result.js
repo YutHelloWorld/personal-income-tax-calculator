@@ -225,11 +225,11 @@ class Result extends Component {
               </TableBody>
             </Table>
             <IconButton
-              color="primary"
+              color="default"
               onClick={this.handleClose}
               className={classes.button}
             >
-              <Icon>highlight_off</Icon>
+              <Icon>close</Icon>
             </IconButton>
           </Dialog>
         )}

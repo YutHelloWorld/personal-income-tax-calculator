@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
 import CalYearTax from './CalYearTax';
 import YearEndBonus from './YearEndBonus';
+import { INSURANCE } from '../constant';
 
 const styles = theme => ({
   root: {
@@ -77,7 +78,7 @@ class Layout extends Component {
         >
           <main className={classes.layout}>
             <Paper className={classes.paper} elevation={2}>
-              <CalYearTax />
+              <CalYearTax {...INSURANCE[0]} idx={0} />
             </Paper>
           </main>
           <main className={classes.layout}>

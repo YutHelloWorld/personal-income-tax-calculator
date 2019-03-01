@@ -17,8 +17,9 @@ const style = theme => ({
   }
 });
 
-const Text = ({ classes, label, value }) => (
+const Text = ({ classes, label, value, city }) => (
   <span>
+    <span className={classes.span}>{city}</span>
     {label}
     <span className={classes.span}>{value}</span>
   </span>
@@ -32,12 +33,8 @@ class CalYearTax extends Component {
   state = {
     monthIncome: '',
     insurance: '',
-    insuranceBase: '',
-    minInsuranceBase: 3054.95,
-    maxInsuranceBase: 15274.74,
-    providentFundBase: '',
-    minProvidentFundBase: 2010,
-    maxProvidentFundBase: 24311,
+    iBase: '',
+    hACBase: '',
     checkProvident: true
   };
 
@@ -80,14 +77,17 @@ class CalYearTax extends Component {
   };
 
   handleChange = name => event => {
+    const {
+      minIBase, // 最低社保基数
+      maxIBase, // 最高社保基数
+      minHACBase, // 最低公积金基数
+      maxHACBase, // 最高公积金基数
+      idx
+    } = this.props;
     if (name === 'checkProvident') {
       const { checked } = event.target;
-      this.setState(({ insuranceBase, providentFundBase, checkProvident }) => {
-        const insurance = getInsurance(
-          insuranceBase,
-          providentFundBase,
-          checked
-        );
+      this.setState(({ iBase, hACBase, checkProvident }) => {
+        const insurance = getInsurance(iBase, hACBase, idx, checked);
         return {
           checkProvident: checked,
           insurance
@@ -98,59 +98,38 @@ class CalYearTax extends Component {
     const { value } = event.target;
     this.setState({ [name]: value });
     if (name === 'monthIncome') {
-      this.setState(
-        ({
-          minInsuranceBase,
-          maxInsuranceBase,
-          minProvidentFundBase,
-          maxProvidentFundBase,
-          checkProvident
-        }) => {
-          const insuranceBase = nomarlizeNumber(
-            value,
-            minInsuranceBase,
-            maxInsuranceBase
-          );
-          const providentFundBase = nomarlizeNumber(
-            value,
-            minProvidentFundBase,
-            maxProvidentFundBase
-          );
-          const insurance = getInsurance(
-            insuranceBase,
-            providentFundBase,
-            checkProvident
-          );
-          return {
-            insuranceBase,
-            providentFundBase,
-            insurance
-          };
-        }
-      );
+      this.setState(({ checkProvident }) => {
+        const iBase = nomarlizeNumber(value, minIBase, maxIBase);
+        const hACBase = nomarlizeNumber(value, minHACBase, maxHACBase);
+        const insurance = getInsurance(iBase, hACBase, idx, checkProvident);
+        return {
+          iBase,
+          hACBase,
+          insurance
+        };
+      });
     }
   };
 
   handleBlur = name => event => {
-    if (name === 'insuranceBase' || name === 'providentFundBase') {
+    const {
+      minIBase, // 最低社保基数
+      maxIBase, // 最高社保基数
+      minHACBase, // 最低公积金基数
+      maxHACBase, // 最高公积金基数
+      idx
+    } = this.props;
+    if (name === 'iBase' || name === 'hACBase') {
       this.setState(state => {
         const _value = nomarlizeNumber(
           state[name],
-          name === 'insuranceBase'
-            ? state.minInsuranceBase
-            : state.minProvidentFundBase,
-          name === 'insuranceBase'
-            ? state.maxInsuranceBase
-            : state.maxProvidentFundBase
+          name === 'iBase' ? minIBase : minHACBase,
+          name === 'iBase' ? maxIBase : maxHACBase
         );
         const insurance =
-          name === 'insuranceBase'
-            ? getInsurance(
-                _value,
-                state.providentFundBase,
-                state.checkProvident
-              )
-            : getInsurance(state.insuranceBase, _value, state.checkProvident);
+          name === 'iBase'
+            ? getInsurance(_value, state.hACBase, idx, state.checkProvident)
+            : getInsurance(state.iBase, _value, idx, state.checkProvident);
         return {
           [name]: _value,
           insurance
@@ -160,16 +139,19 @@ class CalYearTax extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const {
+      classes,
+      city,
+      minIBase,
+      maxIBase,
+      minHACBase,
+      maxHACBase
+    } = this.props;
     const {
       monthIncome,
       insurance,
-      insuranceBase,
-      providentFundBase,
-      minInsuranceBase,
-      maxInsuranceBase,
-      minProvidentFundBase,
-      maxProvidentFundBase,
+      iBase,
+      hACBase,
       checkProvident
     } = this.state;
     return (
@@ -199,36 +181,38 @@ class CalYearTax extends Component {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            id="insuranceBase"
+            id="iBase"
             label="社保缴纳基数(元)"
-            value={insuranceBase}
+            value={iBase}
             fullWidth
             helperText={
               <Text
                 classes={classes}
-                label="杭州市社保缴纳基数范围："
-                value={`${minInsuranceBase}-${maxInsuranceBase}`}
+                city={city}
+                label="社保缴纳基数范围："
+                value={`${minIBase}-${maxIBase}`}
               />
             }
             type="number"
-            onChange={this.handleChange('insuranceBase')}
-            onBlur={this.handleBlur('insuranceBase')}
+            onChange={this.handleChange('iBase')}
+            onBlur={this.handleBlur('iBase')}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            id="providentFundBase"
+            id="hACBase"
             label="公积金缴纳基数(元)"
-            value={providentFundBase}
-            onChange={this.handleChange('providentFundBase')}
-            onBlur={this.handleBlur('providentFundBase')}
+            value={hACBase}
+            onChange={this.handleChange('hACBase')}
+            onBlur={this.handleBlur('hACBase')}
             fullWidth
             disabled={!checkProvident}
             helperText={
               <Text
                 classes={classes}
-                label="杭州市公积金缴纳基数范围："
-                value={`${minProvidentFundBase}-${maxProvidentFundBase}`}
+                city={city}
+                label="公积金缴纳基数范围："
+                value={`${minHACBase}-${maxHACBase}`}
               />
             }
             type="number"
@@ -243,7 +227,7 @@ class CalYearTax extends Component {
                 onChange={this.handleChange('checkProvident')}
               />
             }
-            label="缴纳公积金"
+            label="汇缴住房公积金"
           />
         </Grid>
         <Grid item xs={12} md={4}>

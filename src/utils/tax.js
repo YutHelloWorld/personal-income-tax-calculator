@@ -1,4 +1,5 @@
 import find from './find';
+import { INSURANCE } from '../constant';
 
 export function getIncomeTax(
   income,
@@ -34,14 +35,19 @@ export function getIncomeTax(
   };
 }
 
-export function getInsurance(
-  insuranceBase,
-  providentFundBase,
-  checkProvident = true
-) {
+export function getInsurance(iBase, hACBase, index, checkProvident = true) {
+  if (iBase < INSURANCE[index].minMIBase) {
+    return +(
+      iBase * (INSURANCE[index].tIRates[0] - INSURANCE[index].mIRates[0]) +
+      INSURANCE[index].minMIBase * INSURANCE[index].mIRates[0] +
+      INSURANCE[index].addMI +
+      hACBase * INSURANCE[index].hACRates[0] * Number(checkProvident)
+    ).toFixed(2);
+  }
   return +(
-    insuranceBase * 0.11 +
-    providentFundBase * 0.12 * Number(checkProvident)
+    iBase * INSURANCE[index].tIRates[0] +
+    INSURANCE[index].addMI +
+    hACBase * INSURANCE[index].hACRates[0] * Number(checkProvident)
   ).toFixed(2);
 }
 
