@@ -49,7 +49,7 @@ export const INSURANCE = [
     maxHACBase: 25401, // 最高公积金基数
     minMIBase: 5080, // 最低医保基数
     addMI: 3, // 医保结果附加项
-    hACRates: [0.12, 0, 12], // 公积金比例,
+    hACRates: [0.12, 0.12], // 公积金比例,
     eIRates: [0.08, 0.19], // 养老金缴纳比例
     mIRates: [0.02, 0.1], // 医保缴纳比例
     uIRates: [0.002, 0.008], // 失业险比例
@@ -65,7 +65,7 @@ export const INSURANCE = [
     maxHACBase: 24311, // 最高公积金基数
     minMIBase: 3054.95, // 最低医保基数
     addMI: 0, // 医保附加
-    hACRates: [0.12, 0, 12], // 公积金比例,
+    hACRates: [0.12, 0.12], // 公积金比例,
     eIRates: [0.08, 0.14], // 养老金缴纳比例
     mIRates: [0.02, 0.105], // 医保缴纳比例
     uIRates: [0.005, 0.005], // 失业险比例
@@ -74,3 +74,5 @@ export const INSURANCE = [
     tIRates: [0.105, 0.266]
   }
 ];
+
+export const CITYS = ['北京', '杭州'];

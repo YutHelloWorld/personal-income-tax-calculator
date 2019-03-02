@@ -57,6 +57,9 @@ class Layout extends Component {
 
   render() {
     const { classes, theme, matchesDwonSm } = this.props;
+    const { idx } = this.props.location.state || {
+      idx: 0
+    };
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -78,7 +81,7 @@ class Layout extends Component {
         >
           <main className={classes.layout}>
             <Paper className={classes.paper} elevation={2}>
-              <CalYearTax {...INSURANCE[0]} idx={0} />
+              <CalYearTax {...INSURANCE[idx]} idx={idx} />
             </Paper>
           </main>
           <main className={classes.layout}>

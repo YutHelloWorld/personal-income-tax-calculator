@@ -38,16 +38,16 @@ const styles = theme => ({
   },
   fab: {
     position: 'absolute',
-    bottom: theme.spacing.unit * 12,
+    bottom: theme.spacing.unit * 3,
     right: theme.spacing.unit * 2,
-    opacity: 0.7
+    opacity: 0.8
   },
   fabContainer: {
     position: 'fixed',
     bottom: 0,
     left: 0,
     width: '100%',
-    height: 56,
+    height: theme.spacing.unit * 3 + 56,
     [theme.breakpoints.up(600 + theme.spacing.unit * 2 * 2)]: {
       width: 600 + theme.spacing.unit * 2 * 2,
       left: 'auto'

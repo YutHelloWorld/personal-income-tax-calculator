@@ -33,7 +33,11 @@ const MyLink = props => <Link to="/city" {...props} />;
 
 class CalYearTax extends Component {
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    minIBase: PropTypes.number.isRequired,
+    maxIBase: PropTypes.number.isRequired,
+    minHACBase: PropTypes.number.isRequired,
+    maxHACBase: PropTypes.number.isRequired
   };
 
   state = {
