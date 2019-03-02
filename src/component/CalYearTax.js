@@ -45,21 +45,23 @@ class CalYearTax extends Component {
     insurance: '',
     iBase: '',
     hACBase: '',
+    additional: '',
     checkProvident: true
   };
 
   handleClick = e => {
-    const { monthIncome, insurance } = this.state;
+    const { monthIncome, insurance, additional } = this.state;
     if (monthIncome && insurance) {
       e.preventDefault();
-      const oTax = getIncomeTax(monthIncome, insurance);
+      const oTax = getIncomeTax(monthIncome, insurance, 12, +additional);
       const aMonthTax = new Array(12).fill(1).map((value, idx) => {
         // 1月数据单算
         if (!idx) {
           const { tax: t, income: i, afterTax: a } = getIncomeTax(
             monthIncome,
             insurance,
-            1
+            1,
+            +additional
           );
           return {
             tax: t,
@@ -68,8 +70,13 @@ class CalYearTax extends Component {
           };
         }
         // 当月 - 上月
-        const current = getIncomeTax(monthIncome, insurance, idx + 1);
-        const prev = getIncomeTax(monthIncome, insurance, idx);
+        const current = getIncomeTax(
+          monthIncome,
+          insurance,
+          idx + 1,
+          +additional
+        );
+        const prev = getIncomeTax(monthIncome, insurance, idx, +additional);
         const tax = +(current.tax - prev.tax).toFixed(2);
         const income = +monthIncome;
         const afterTax = +(income - tax - +insurance).toFixed(2);
@@ -144,6 +151,7 @@ class CalYearTax extends Component {
       insurance,
       iBase,
       hACBase,
+      additional,
       checkProvident
     } = this.state;
     const { city, minIBase, maxIBase, minHACBase, maxHACBase } = INSURANCE[
@@ -223,6 +231,18 @@ class CalYearTax extends Component {
               />
             }
             type="number"
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            id="additional"
+            label="专项附加扣除(元)"
+            value={additional}
+            onChange={this.handleChange('additional')}
+            onBlur={this.handleBlur('additional')}
+            fullWidth
+            type="number"
+            helperText="*专项附加扣除请在个人所得税APP中申报查看"
           />
         </Grid>
         <Grid item xs={12}>

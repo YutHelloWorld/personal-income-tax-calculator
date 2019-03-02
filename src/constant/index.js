@@ -72,7 +72,39 @@ export const INSURANCE = [
     wIIRates: [0, 0.004], // 工伤险比例
     cIRates: [0, 0.012], // 生育险
     tIRates: [0.105, 0.266]
+  },
+  {
+    city: '上海',
+    minIBase: 4279, // 最低社保基数
+    maxIBase: 21396, // 最高社保基数
+    minHACBase: 2300, // 最低公积金基数
+    maxHACBase: 21396, // 最高公积金基数
+    minMIBase: 4279, // 最低医保基数
+    addMI: 0, // 医保附加
+    hACRates: [0.07, 0.07], // 公积金比例,
+    eIRates: [0.08, 0.2], // 养老金缴纳比例
+    mIRates: [0.02, 0.095], // 医保缴纳比例
+    uIRates: [0.005, 0.005], // 失业险比例
+    wIIRates: [0, 0.002], // 工伤险比例
+    cIRates: [0, 0.01], // 生育险
+    tIRates: [0.105, 0.312]
+  },
+  {
+    city: '深圳',
+    minIBase: 2200, // 最低社保基数
+    maxIBase: 25044, // 最高社保基数
+    minHACBase: 2130, // 最低公积金基数
+    maxHACBase: 25044, // 最高公积金基数
+    minMIBase: 5008.8, // 最低医保基数
+    addMI: 0, // 医保附加
+    hACRates: [0.05, 0.05], // 公积金比例,
+    eIRates: [0.08, 0.2], // 养老金缴纳比例
+    mIRates: [0.02, 0.095], // 医保缴纳比例
+    uIRates: [0.003, 0.007], // 失业险比例
+    wIIRates: [0, 0.0014], // 工伤险比例
+    cIRates: [0, 0.0045], // 生育险
+    tIRates: [0.103, 0.3079]
   }
 ];
 
-export const CITYS = ['北京', '杭州'];
+export const CITYS = ['北京', '杭州', '上海', '深圳'];
