@@ -245,7 +245,7 @@ class CalYearTax extends Component {
             helperText="*专项附加扣除请在个人所得税APP中申报查看"
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={6}>
           <FormControlLabel
             control={
               <Checkbox
