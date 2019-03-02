@@ -7,7 +7,6 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { withRouter } from 'react-router-dom';
 import { getBonusTax } from '../utils/tax';
 
 const style = theme => ({});
@@ -19,7 +18,9 @@ const aModeText = {
 
 class YearEndBonus extends Component {
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    compute: PropTypes.func.isRequired,
+    switchType: PropTypes.func.isRequired
   };
 
   state = {
@@ -35,10 +36,9 @@ class YearEndBonus extends Component {
     const { bonus, mode } = this.state;
     if (bonus) {
       e.preventDefault();
-      this.props.history.push({
-        pathname: '/result',
-        state: { result: getBonusTax(+bonus, mode === 'forward'), type: 2 }
-      });
+      this.props.history.push('/result');
+      this.props.switchType(2);
+      this.props.compute(getBonusTax(+bonus, mode === 'forward'));
     }
   };
 
@@ -91,4 +91,4 @@ class YearEndBonus extends Component {
     );
   }
 }
-export default withRouter(withStyles(style)(YearEndBonus));
+export default withStyles(style)(YearEndBonus);

@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import nomarlizeNumber from '../utils/normalizeNumber';
 import { getIncomeTax, getInsurance } from '../utils/tax';
 import { INSURANCE } from '../constant';
@@ -35,7 +35,9 @@ const MyLink = props => <Link to="/city" {...props} />;
 class CalYearTax extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    cityIdx: PropTypes.number.isRequired
+    cityIdx: PropTypes.number.isRequired,
+    compute: PropTypes.func.isRequired,
+    switchType: PropTypes.func.isRequired
   };
 
   state = {
@@ -77,10 +79,9 @@ class CalYearTax extends Component {
           afterTax
         };
       });
-      this.props.history.push({
-        pathname: '/result',
-        state: { result: { ...oTax, aMonthTax, insurance }, type: 1 }
-      });
+      this.props.history.push('/result');
+      this.props.switchType(1);
+      this.props.compute({ ...oTax, aMonthTax, insurance });
     }
   };
 

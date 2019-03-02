@@ -15,6 +15,13 @@ export const switchCity = city => ({
   payload: city
 });
 
+export const switchCityWithCb = city => {
+  return (dispatch, getState) => {
+    dispatch(switchCity(city));
+    localStorage.setItem('cityIdx', city);
+  };
+};
+
 /**
 |--------------------------------------------------
 | Action Handlers
@@ -30,7 +37,7 @@ const ACTION_HANDLERS = {
 | Reducer
 |--------------------------------------------------
 */
-const initialState = 0;
+const initialState = +localStorage.getItem('cityIdx') || 0;
 
 export default function(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];

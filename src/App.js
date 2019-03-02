@@ -16,7 +16,7 @@ import Layout from './component/Layout';
 import ScrollToTop from './component/ScrollToTop';
 import store from './store/createStore';
 
-const Result = lazy(() => import('./component/Result'));
+const Result = lazy(() => import('./container/ResultContainer'));
 const City = lazy(() => import('./container/CityContainer'));
 
 function App({ theme }) {

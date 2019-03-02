@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import cityReducer from './city';
+import resultReducer from './result';
 
 export const makeRootReducer = asyncReducers => {
   return combineReducers({
     cityIdx: cityReducer,
+    calc: resultReducer,
     ...asyncReducers
   });
 };

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { switchCity } from '../store/city';
+import { switchCityWithCb } from '../store/city';
 import City from '../component/City';
 
 const mapStateToProps = state => ({
@@ -7,7 +7,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  switchCity
+  switchCity: switchCityWithCb
 };
 
 export default connect(

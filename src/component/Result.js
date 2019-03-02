@@ -97,7 +97,9 @@ class Result extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired
+    fullScreen: PropTypes.bool.isRequired,
+    type: PropTypes.number.isRequired,
+    result: PropTypes.object.isRequired
   };
 
   state = {
@@ -115,11 +117,7 @@ class Result extends Component {
     this.setState({ open: true });
   };
   render() {
-    const { classes, fullScreen } = this.props;
-    const { type, result } = this.props.location.state || {
-      type: 0,
-      result: {}
-    };
+    const { classes, fullScreen, type, result } = this.props;
     const data = type === 1 ? RANGE : MONTH_RANGE;
     return (
       <main className={classes.root}>
