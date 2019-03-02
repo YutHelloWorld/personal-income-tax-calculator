@@ -252,4 +252,4 @@ class CalYearTax extends Component {
   }
 }
 
-export default withRouter(withStyles(style)(CalYearTax));
+export default withStyles(style)(CalYearTax);
