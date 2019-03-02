@@ -38,18 +38,20 @@ const styles = theme => ({
   },
   fab: {
     position: 'absolute',
-    bottom: theme.spacing.unit * 2,
-    right: 0,
-    left: 0,
-    margin: '0 auto',
-    opacity: 0.8
+    bottom: theme.spacing.unit * 12,
+    right: theme.spacing.unit * 2,
+    opacity: 0.7
   },
   fabContainer: {
     position: 'fixed',
     bottom: 0,
     left: 0,
     width: '100%',
-    height: 56
+    height: 56,
+    [theme.breakpoints.up(600 + theme.spacing.unit * 2 * 2)]: {
+      width: 600 + theme.spacing.unit * 2 * 2,
+      left: 'auto'
+    }
   },
   paper: {
     marginTop: theme.spacing.unit * 3,
@@ -123,7 +125,7 @@ class Result extends Component {
       <main className={classes.root}>
         <div className={classes.fabContainer}>
           <Fab
-            color="primary"
+            color="secondary"
             className={classes.fab}
             onClick={this.handleClick}
           >
@@ -206,10 +208,10 @@ class Result extends Component {
               <TableHead>
                 <TableRow className={classes.tableRow}>
                   <CustomTableCell>月份</CustomTableCell>
-                  <CustomTableCell>税前(元)</CustomTableCell>
-                  <CustomTableCell>当月个税(元)</CustomTableCell>
-                  <CustomTableCell>五险一金(元)</CustomTableCell>
-                  <CustomTableCell>税后收入(元)</CustomTableCell>
+                  <CustomTableCell>税前</CustomTableCell>
+                  <CustomTableCell>当月个税</CustomTableCell>
+                  <CustomTableCell>五险一金</CustomTableCell>
+                  <CustomTableCell>税后</CustomTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

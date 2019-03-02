@@ -3,17 +3,21 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import nomarlizeNumber from '../utils/normalizeNumber';
 import { getIncomeTax, getInsurance } from '../utils/tax';
 
 const style = theme => ({
   span: {
     color: orange[500]
+  },
+  btnLabel: {
+    justifyContent: 'flex-start'
   }
 });
 
@@ -24,6 +28,8 @@ const Text = ({ classes, label, value, city }) => (
     <span className={classes.span}>{value}</span>
   </span>
 );
+
+const MyLink = props => <Link to="/city" {...props} />;
 
 class CalYearTax extends Component {
   static propTypes = {
@@ -156,6 +162,18 @@ class CalYearTax extends Component {
     } = this.state;
     return (
       <Grid container spacing={24} justify="flex-end" component="form">
+        <Grid item xs={12}>
+          <Button
+            size="small"
+            variant="contained"
+            fullWidth
+            classes={{ label: classes.btnLabel }}
+            component={MyLink}
+          >
+            <Icon color="inherit">place</Icon>
+            {city}
+          </Button>
+        </Grid>
         <Grid item xs={12} md={6}>
           <TextField
             required

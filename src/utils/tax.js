@@ -36,16 +36,10 @@ export function getIncomeTax(
 }
 
 export function getInsurance(iBase, hACBase, index, checkProvident = true) {
-  if (iBase < INSURANCE[index].minMIBase) {
-    return +(
-      iBase * (INSURANCE[index].tIRates[0] - INSURANCE[index].mIRates[0]) +
-      INSURANCE[index].minMIBase * INSURANCE[index].mIRates[0] +
-      INSURANCE[index].addMI +
-      hACBase * INSURANCE[index].hACRates[0] * Number(checkProvident)
-    ).toFixed(2);
-  }
   return +(
-    iBase * INSURANCE[index].tIRates[0] +
+    iBase * (INSURANCE[index].tIRates[0] - INSURANCE[index].mIRates[0]) +
+    (iBase < INSURANCE[index].minMIBase ? INSURANCE[index].minMIBase : iBase) *
+      INSURANCE[index].mIRates[0] +
     INSURANCE[index].addMI +
     hACBase * INSURANCE[index].hACRates[0] * Number(checkProvident)
   ).toFixed(2);
