@@ -6,9 +6,8 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
-import CalYearTax from './CalYearTax';
+import CalYearTax from '../container/CalYearTaxContainer';
 import YearEndBonus from './YearEndBonus';
-import { INSURANCE } from '../constant';
 
 const styles = theme => ({
   root: {
@@ -57,9 +56,6 @@ class Layout extends Component {
 
   render() {
     const { classes, theme, matchesDwonSm } = this.props;
-    const { idx } = this.props.location.state || {
-      idx: 0
-    };
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -81,7 +77,7 @@ class Layout extends Component {
         >
           <main className={classes.layout}>
             <Paper className={classes.paper} elevation={2}>
-              <CalYearTax {...INSURANCE[idx]} idx={idx} />
+              <CalYearTax />
             </Paper>
           </main>
           <main className={classes.layout}>

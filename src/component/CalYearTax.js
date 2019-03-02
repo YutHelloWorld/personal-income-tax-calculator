@@ -11,6 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { withRouter, Link } from 'react-router-dom';
 import nomarlizeNumber from '../utils/normalizeNumber';
 import { getIncomeTax, getInsurance } from '../utils/tax';
+import { INSURANCE } from '../constant';
 
 const style = theme => ({
   span: {
@@ -34,10 +35,7 @@ const MyLink = props => <Link to="/city" {...props} />;
 class CalYearTax extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    minIBase: PropTypes.number.isRequired,
-    maxIBase: PropTypes.number.isRequired,
-    minHACBase: PropTypes.number.isRequired,
-    maxHACBase: PropTypes.number.isRequired
+    cityIdx: PropTypes.number.isRequired
   };
 
   state = {
@@ -87,17 +85,12 @@ class CalYearTax extends Component {
   };
 
   handleChange = name => event => {
-    const {
-      minIBase, // 最低社保基数
-      maxIBase, // 最高社保基数
-      minHACBase, // 最低公积金基数
-      maxHACBase, // 最高公积金基数
-      idx
-    } = this.props;
+    const { cityIdx } = this.props;
+    const { minIBase, maxIBase, minHACBase, maxHACBase } = INSURANCE[cityIdx];
     if (name === 'checkProvident') {
       const { checked } = event.target;
-      this.setState(({ iBase, hACBase, checkProvident }) => {
-        const insurance = getInsurance(iBase, hACBase, idx, checked);
+      this.setState(({ iBase, hACBase }) => {
+        const insurance = getInsurance(iBase, hACBase, cityIdx, checked);
         return {
           checkProvident: checked,
           insurance
@@ -111,7 +104,7 @@ class CalYearTax extends Component {
       this.setState(({ checkProvident }) => {
         const iBase = nomarlizeNumber(value, minIBase, maxIBase);
         const hACBase = nomarlizeNumber(value, minHACBase, maxHACBase);
-        const insurance = getInsurance(iBase, hACBase, idx, checkProvident);
+        const insurance = getInsurance(iBase, hACBase, cityIdx, checkProvident);
         return {
           iBase,
           hACBase,
@@ -122,13 +115,8 @@ class CalYearTax extends Component {
   };
 
   handleBlur = name => event => {
-    const {
-      minIBase, // 最低社保基数
-      maxIBase, // 最高社保基数
-      minHACBase, // 最低公积金基数
-      maxHACBase, // 最高公积金基数
-      idx
-    } = this.props;
+    const { cityIdx } = this.props;
+    const { minIBase, maxIBase, minHACBase, maxHACBase } = INSURANCE[cityIdx];
     if (name === 'iBase' || name === 'hACBase') {
       this.setState(state => {
         const _value = nomarlizeNumber(
@@ -138,8 +126,8 @@ class CalYearTax extends Component {
         );
         const insurance =
           name === 'iBase'
-            ? getInsurance(_value, state.hACBase, idx, state.checkProvident)
-            : getInsurance(state.iBase, _value, idx, state.checkProvident);
+            ? getInsurance(_value, state.hACBase, cityIdx, state.checkProvident)
+            : getInsurance(state.iBase, _value, cityIdx, state.checkProvident);
         return {
           [name]: _value,
           insurance
@@ -149,14 +137,7 @@ class CalYearTax extends Component {
   };
 
   render() {
-    const {
-      classes,
-      city,
-      minIBase,
-      maxIBase,
-      minHACBase,
-      maxHACBase
-    } = this.props;
+    const { classes, cityIdx } = this.props;
     const {
       monthIncome,
       insurance,
@@ -164,6 +145,9 @@ class CalYearTax extends Component {
       hACBase,
       checkProvident
     } = this.state;
+    const { city, minIBase, maxIBase, minHACBase, maxHACBase } = INSURANCE[
+      cityIdx
+    ];
     return (
       <Grid container spacing={24} justify="flex-end" component="form">
         <Grid item xs={12}>

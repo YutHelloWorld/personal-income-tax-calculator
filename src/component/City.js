@@ -36,17 +36,13 @@ class City extends Component {
     classes: PropTypes.object.isRequired
   };
 
-  handleClick = idx => e => {
-    this.props.history.push({
-      pathname: '/',
-      state: {
-        idx
-      }
-    });
+  handleClick = cityIdx => e => {
+    this.props.switchCity(cityIdx);
+    this.props.history.push('/');
   };
 
   render() {
-    const { classes, idx } = this.props;
+    const { classes, cityIdx } = this.props;
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -58,11 +54,11 @@ class City extends Component {
               <Grid item key={i}>
                 <Button
                   size="small"
-                  color={i === idx ? 'primary' : 'inherit'}
+                  color={i === cityIdx ? 'primary' : 'inherit'}
                   variant="contained"
                   onClick={this.handleClick(i)}
                 >
-                  {i === idx && <Icon>place</Icon>}
+                  {i === cityIdx && <Icon>place</Icon>}
                   {city}
                 </Button>
               </Grid>

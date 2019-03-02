@@ -11,11 +11,13 @@ import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 import red from '@material-ui/core/colors/red';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import Layout from './component/Layout';
 import ScrollToTop from './component/ScrollToTop';
+import store from './store/createStore';
 
 const Result = lazy(() => import('./component/Result'));
-const City = lazy(() => import('./component/City'));
+const City = lazy(() => import('./container/CityContainer'));
 
 function App({ theme }) {
   const matchesDwonSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -28,7 +30,7 @@ function App({ theme }) {
           render={props => <Layout {...props} matchesDwonSm={matchesDwonSm} />}
         />
         <Route path="/result" render={props => <Result {...props} />} />
-        <Route path="/city" render={props => <City {...props} idx={0} />} />
+        <Route path="/city" render={props => <City {...props} />} />
       </Suspense>
     </Switch>
   );
@@ -56,11 +58,13 @@ export default function ThemeHelper() {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <Router basename="/personal-income-tax-calculator/">
-        <ScrollToTop>
-          <ThemeApp />
-        </ScrollToTop>
-      </Router>
+      <Provider store={store}>
+        <Router basename="/personal-income-tax-calculator/">
+          <ScrollToTop>
+            <ThemeApp />
+          </ScrollToTop>
+        </Router>
+      </Provider>
     </MuiThemeProvider>
   );
 }
