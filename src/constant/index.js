@@ -48,14 +48,18 @@ export const INSURANCE = [
     minHACBase: 2409, // 最低公积金基数
     maxHACBase: 25401, // 最高公积金基数
     minMIBase: 5080, // 最低医保基数
-    addMI: 3, // 医保结果附加项
+    minEIBase: 3387, //最低养老保险
+    minUIBase: 3387,
+    minWIIBase: 5080,
+    minCIBase: 5080,
+    addMI: 3, // 大病
     hACRates: [0.12, 0.12], // 公积金比例,
     eIRates: [0.08, 0.19], // 养老金缴纳比例
     mIRates: [0.02, 0.1], // 医保缴纳比例
     uIRates: [0.002, 0.008], // 失业险比例
-    wIIRates: [0, 0.005], // 工伤险比例
+    wIIRates: [0, 0.004], // 工伤险比例
     cIRates: [0, 0.008], // 生育险
-    tIRates: [0.102, 0.311]
+    tIRates: [0.102, 0.31]
   },
   {
     city: '杭州',
@@ -64,6 +68,10 @@ export const INSURANCE = [
     minHACBase: 2010, // 最低公积金基数
     maxHACBase: 24311, // 最高公积金基数
     minMIBase: 3054.95, // 最低医保基数
+    minEIBase: 3054.95, //最低养老保险
+    minUIBase: 3054.95,
+    minWIIBase: 3054.95,
+    minCIBase: 3054.95,
     addMI: 0, // 医保附加
     hACRates: [0.12, 0.12], // 公积金比例,
     eIRates: [0.08, 0.14], // 养老金缴纳比例
@@ -78,14 +86,18 @@ export const INSURANCE = [
     minIBase: 4279, // 最低社保基数
     maxIBase: 21396, // 最高社保基数
     minHACBase: 2300, // 最低公积金基数
-    maxHACBase: 21396, // 最高公积金基数
+    maxHACBase: 21400, // 最高公积金基数
     minMIBase: 4279, // 最低医保基数
+    minEIBase: 4279, //最低养老保险
+    minUIBase: 4279,
+    minWIIBase: 4279,
+    minCIBase: 4279,
     addMI: 0, // 医保附加
     hACRates: [0.07, 0.07], // 公积金比例,
     eIRates: [0.08, 0.2], // 养老金缴纳比例
     mIRates: [0.02, 0.095], // 医保缴纳比例
     uIRates: [0.005, 0.005], // 失业险比例
-    wIIRates: [0, 0.002], // 工伤险比例
+    wIIRates: [0, 0.005], // 工伤险比例
     cIRates: [0, 0.01], // 生育险
     tIRates: [0.105, 0.312]
   },
@@ -95,7 +107,11 @@ export const INSURANCE = [
     maxIBase: 25044, // 最高社保基数
     minHACBase: 2130, // 最低公积金基数
     maxHACBase: 25044, // 最高公积金基数
-    minMIBase: 5008.8, // 最低医保基数
+    minMIBase: 5009, // 最低医保基数
+    minEIBase: 2200, //最低养老保险
+    minUIBase: 2200,
+    minWIIBase: 2200,
+    minCIBase: 200,
     addMI: 0, // 医保附加
     hACRates: [0.05, 0.05], // 公积金比例,
     eIRates: [0.08, 0.2], // 养老金缴纳比例

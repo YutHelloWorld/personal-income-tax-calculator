@@ -88,7 +88,12 @@ class CalYearTax extends Component {
       });
       this.props.history.push('/result');
       this.props.switchType(1);
-      this.props.compute({ ...oTax, aMonthTax, insurance });
+      this.props.compute({
+        ...oTax,
+        aMonthTax,
+        insurance,
+        additional: +additional * 12
+      });
     }
   };
 
@@ -236,7 +241,7 @@ class CalYearTax extends Component {
         <Grid item xs={12} md={6}>
           <TextField
             id="additional"
-            label="专项附加扣除(元)"
+            label="专项附加扣除(元/月)"
             value={additional}
             onChange={this.handleChange('additional')}
             onBlur={this.handleBlur('additional')}

@@ -36,12 +36,27 @@ export function getIncomeTax(
 }
 
 export function getInsurance(iBase, hACBase, index, checkProvident = true) {
+  const {
+    minMIBase,
+    minEIBase,
+    minUIBase,
+    eIRates,
+    mIRates,
+    uIRates,
+    hACRates,
+    addMI
+  } = INSURANCE[index];
+  const mI =
+    iBase < minMIBase
+      ? minMIBase * mIRates[0] + addMI
+      : iBase * mIRates[0] + addMI;
+  const eI = iBase < minEIBase ? minEIBase * eIRates[0] : iBase * eIRates[0];
+  const uI = iBase < minUIBase ? minUIBase * uIRates[0] : iBase * uIRates[0];
   return +(
-    iBase * (INSURANCE[index].tIRates[0] - INSURANCE[index].mIRates[0]) +
-    (iBase < INSURANCE[index].minMIBase ? INSURANCE[index].minMIBase : iBase) *
-      INSURANCE[index].mIRates[0] +
-    INSURANCE[index].addMI +
-    hACBase * INSURANCE[index].hACRates[0] * Number(checkProvident)
+    mI +
+    eI +
+    uI +
+    hACBase * hACRates[0] * Number(checkProvident)
   ).toFixed(2);
 }
 

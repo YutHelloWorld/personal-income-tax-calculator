@@ -105,6 +105,7 @@ class Result extends Component {
   state = {
     open: false
   };
+
   handleClick = () => {
     this.props.history.push('/');
   };
@@ -116,6 +117,7 @@ class Result extends Component {
   handleOpen = () => {
     this.setState({ open: true });
   };
+
   render() {
     const { classes, fullScreen, type, result } = this.props;
     const data = type === 1 ? RANGE : MONTH_RANGE;
@@ -184,6 +186,14 @@ class Result extends Component {
                     }
                   />
                   <Typography>{result.totalInsurance}</Typography>
+                </ListItem>
+                <ListItem className={classes.listItem}>
+                  <ListItemText
+                    primary={
+                      <Typography variant="caption">专项抵扣</Typography>
+                    }
+                  />
+                  <Typography>{result.additional}</Typography>
                 </ListItem>
               </List>
               <Button variant="text" color="primary" onClick={this.handleOpen}>
