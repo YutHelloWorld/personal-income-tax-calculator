@@ -8,7 +8,7 @@ export function getIncomeTax(
   deduction = 0,
   threshold = 5000
 ) {
-  const totalIncome = +income * month;
+  const totalIncome = +(+income * month).toFixed(2);
   const totalDeduction = +(
     (+insurance + deduction + threshold) *
     month
