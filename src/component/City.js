@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
+import { Paper, Button, Typography, Grid } from '@material-ui/core';
+import { Place } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import { CITYS } from '../constant';
 
 const styles = theme => ({
@@ -58,7 +55,7 @@ class City extends Component {
                   variant="contained"
                   onClick={this.handleClick(i)}
                 >
-                  {i === cityIdx && <Icon>place</Icon>}
+                  {i === cityIdx && <Place />}
                   {city}
                 </Button>
               </Grid>

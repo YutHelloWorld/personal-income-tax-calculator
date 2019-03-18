@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
+import {
+  Paper,
+  Grid,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  Fab,
+  Dialog,
+  IconButton,
+  Button
+} from '@material-ui/core';
 import orange from '@material-ui/core/colors/orange';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Fab from '@material-ui/core/Fab';
-import Icon from '@material-ui/core/Icon';
-import Dialog from '@material-ui/core/Dialog';
+import { Home, List as ListIcon, Close } from '@material-ui/icons';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import { RANGE, MONTH_RANGE } from '../constant';
 import CustomTableCell from './CustomTableCell';
 import Transition from './Transition';
@@ -129,7 +131,7 @@ class Result extends Component {
             className={classes.fab}
             onClick={this.handleClick}
           >
-            <Icon>home</Icon>
+            <Home />
           </Fab>
         </div>
         <Paper className={classes.paper} elevation={2}>
@@ -197,7 +199,7 @@ class Result extends Component {
                 </ListItem>
               </List>
               <Button variant="text" color="primary" onClick={this.handleOpen}>
-                <Icon>list</Icon>
+                <ListIcon />
                 查看每月收入明细
               </Button>
             </React.Fragment>
@@ -239,7 +241,7 @@ class Result extends Component {
               onClick={this.handleClose}
               className={classes.button}
             >
-              <Icon>close</Icon>
+              <Close />
             </IconButton>
           </Dialog>
         )}

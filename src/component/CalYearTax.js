@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
+import {
+  Grid,
+  TextField,
+  Button,
+  FormControlLabel,
+  Checkbox
+} from '@material-ui/core';
+import { Place } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import { Link } from 'react-router-dom';
 import nomarlizeNumber from '../utils/normalizeNumber';
 import { getIncomeTax, getInsurance } from '../utils/tax';
@@ -172,7 +174,7 @@ class CalYearTax extends Component {
             classes={{ label: classes.btnLabel }}
             component={MyLink}
           >
-            <Icon color="inherit">place</Icon>
+            <Place color="inherit" />
             {city}
           </Button>
         </Grid>
