@@ -110,6 +110,7 @@ class CalYearTax extends Component {
   handleChange = name => event => {
     const { cityIdx } = this.props;
     const { IBases, HACBases } = INSURANCE[cityIdx];
+
     if (name === 'checkProvident') {
       const { checked } = event.target;
       this.setState(({ IBase, HACBase, HACRate }) => {
@@ -127,8 +128,10 @@ class CalYearTax extends Component {
       });
       return;
     }
+
     const { value } = event.target;
     this.setState({ [name]: value });
+
     if (name === 'monthIncome') {
       this.setState(({ checkProvident, HACRate }) => {
         const IBase = nomarlizeNumber(value, IBases);
@@ -143,6 +146,21 @@ class CalYearTax extends Component {
         return {
           IBase,
           HACBase,
+          insurance
+        };
+      });
+    }
+
+    if (name === 'HACRate') {
+      this.setState(({ IBase, HACBase, checkProvident }) => {
+        const insurance = getInsurance(
+          IBase,
+          HACBase,
+          cityIdx,
+          checkProvident,
+          value
+        );
+        return {
           insurance
         };
       });
@@ -182,22 +200,6 @@ class CalYearTax extends Component {
     }
   };
 
-  handleSlect = event => {
-    const r = +event.target.value;
-    this.setState(state => {
-      const insurance = getInsurance(
-        state.IBase,
-        state.HACBase,
-        this.props.cityIdx,
-        state.checkProvident,
-        r
-      );
-      return {
-        HACRate: r,
-        insurance
-      };
-    });
-  };
   render() {
     const { classes, cityIdx } = this.props;
     const {
@@ -315,7 +317,7 @@ class CalYearTax extends Component {
             <InputLabel htmlFor="HACRate">比例</InputLabel>
             <Select
               value={this.state.HACRate}
-              onChange={this.handleSlect}
+              onChange={this.handleChange('HACRate')}
               inputProps={{
                 name: 'HACRate',
                 id: 'HACRate'
