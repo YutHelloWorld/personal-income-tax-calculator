@@ -44,13 +44,19 @@ export function getInsurance(iBase, hACBase, index, checkProvident = true) {
     mIRates,
     uIRates,
     hACRates,
-    addMI
+    addMI,
+    maxEIBase
   } = INSURANCE[index];
   const mI =
     iBase < minMIBase
       ? minMIBase * mIRates[0] + addMI
       : iBase * mIRates[0] + addMI;
-  const eI = iBase < minEIBase ? minEIBase * eIRates[0] : iBase * eIRates[0];
+  const eI =
+    iBase < minEIBase
+      ? minEIBase * eIRates[0]
+      : maxEIBase && iBase > maxEIBase
+      ? maxEIBase * eIRates[0]
+      : iBase * eIRates[0];
   const uI = iBase < minUIBase ? minUIBase * uIRates[0] : iBase * uIRates[0];
   return +(
     mI +

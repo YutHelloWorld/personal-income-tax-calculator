@@ -58,8 +58,7 @@ export const INSURANCE = [
     mIRates: [0.02, 0.1], // 医保缴纳比例
     uIRates: [0.002, 0.008], // 失业险比例
     wIIRates: [0, 0.004], // 工伤险比例
-    cIRates: [0, 0.008], // 生育险
-    tIRates: [0.102, 0.31]
+    cIRates: [0, 0.008] // 生育险
   },
   {
     city: '杭州',
@@ -78,8 +77,7 @@ export const INSURANCE = [
     mIRates: [0.02, 0.105], // 医保缴纳比例
     uIRates: [0.005, 0.005], // 失业险比例
     wIIRates: [0, 0.004], // 工伤险比例
-    cIRates: [0, 0.012], // 生育险
-    tIRates: [0.105, 0.266]
+    cIRates: [0, 0.012] // 生育险
   },
   {
     city: '上海',
@@ -98,8 +96,7 @@ export const INSURANCE = [
     mIRates: [0.02, 0.095], // 医保缴纳比例
     uIRates: [0.005, 0.005], // 失业险比例
     wIIRates: [0, 0.005], // 工伤险比例
-    cIRates: [0, 0.01], // 生育险
-    tIRates: [0.105, 0.312]
+    cIRates: [0, 0.01] // 生育险
   },
   {
     city: '深圳',
@@ -118,8 +115,7 @@ export const INSURANCE = [
     mIRates: [0.02, 0.095], // 医保缴纳比例
     uIRates: [0.003, 0.007], // 失业险比例
     wIIRates: [0, 0.0014], // 工伤险比例
-    cIRates: [0, 0.0045], // 生育险
-    tIRates: [0.103, 0.3079]
+    cIRates: [0, 0.0045] // 生育险
   },
   {
     city: '宁波',
@@ -138,8 +134,7 @@ export const INSURANCE = [
     mIRates: [0.02, 0.09], // 医保缴纳比例
     uIRates: [0.005, 0.005], // 失业险比例
     wIIRates: [0, 0], // 工伤险比例
-    cIRates: [0, 0.007], // 生育险
-    tIRates: [0.105, 0.242]
+    cIRates: [0, 0.007] // 生育险
   },
   {
     city: '苏州',
@@ -158,8 +153,7 @@ export const INSURANCE = [
     mIRates: [0.02, 0.09], // 医保缴纳比例
     uIRates: [0.005, 0.005], // 失业险比例
     wIIRates: [0, 0.015], // 工伤险比例
-    cIRates: [0, 0.008], // 生育险
-    tIRates: [0.105, 0.308]
+    cIRates: [0, 0.008] // 生育险
   },
   {
     city: '无锡',
@@ -178,9 +172,37 @@ export const INSURANCE = [
     mIRates: [0.02, 0.079], // 医保缴纳比例
     uIRates: [0.005, 0.005], // 失业险比例
     wIIRates: [0, 0.015], // 工伤险比例
-    cIRates: [0, 0.008], // 生育险
-    tIRates: [0.105, 0.297]
+    cIRates: [0, 0.008] // 生育险
+  },
+  {
+    city: '西安',
+    minIBase: 3371, // 最低社保基数
+    maxIBase: 19443, // 最高社保基数
+    minHACBase: 1680, // 最低公积金基数
+    maxHACBase: 19443, // 最高公积金基数
+    minMIBase: 3889, // 最低医保基数
+    minEIBase: 3371, //最低养老保险
+    maxEIBase: 16857, // 最高养老保险
+    minUIBase: 3889, // 最低失业保险
+    minWIIBase: 3389, // 最低工伤保险
+    minCIBase: 3889, // 最低生育保险
+    addMI: 1.6, // 大病医保附加
+    hACRates: [0.1, 0.1], // 公积金比例,
+    eIRates: [0.08, 0.19], // 养老金缴纳比例
+    mIRates: [0.02, 0.079], // 医保缴纳比例
+    uIRates: [0.003, 0.007], // 失业险比例
+    wIIRates: [0, 0.028], // 工伤险比例
+    cIRates: [0, 0.005] // 生育险
   }
 ];
 
-export const CITYS = ['北京', '杭州', '上海', '深圳', '宁波', '苏州', '无锡'];
+export const CITYS = [
+  '北京',
+  '杭州',
+  '上海',
+  '深圳',
+  '宁波',
+  '苏州',
+  '无锡',
+  '西安'
+];
