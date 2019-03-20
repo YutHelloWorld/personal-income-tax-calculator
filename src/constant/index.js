@@ -172,7 +172,7 @@ export const INSURANCE = [
     minUIBase: 3030,
     minWIIBase: 3030,
     minCIBase: 3030,
-    addMI: 5, // 医保附加
+    addMI: 0, // 医保附加
     hACRates: [0.08, 0.08], // 公积金比例,
     eIRates: [0.08, 0.19], // 养老金缴纳比例
     mIRates: [0.02, 0.079], // 医保缴纳比例
