@@ -1,5 +1,6 @@
 import find from './find';
 import { INSURANCE } from '../constant';
+import nomarlizeNumber from './normalizeNumber';
 
 export function getIncomeTax(
   income,
@@ -35,35 +36,28 @@ export function getIncomeTax(
   };
 }
 
-export function getInsurance(iBase, hACBase, index, checkProvident = true) {
+export function getInsurance(
+  IBase,
+  HACBase,
+  index,
+  checkProvident = true,
+  HACRate
+) {
   const {
-    minMIBase,
-    minEIBase,
-    minUIBase,
-    eIRates,
-    mIRates,
-    uIRates,
-    hACRates,
-    addMI,
-    maxEIBase
+    MIBases,
+    EIBases,
+    UIBases,
+    EIRates,
+    MIRates,
+    UIRates,
+    addMI
   } = INSURANCE[index];
-  const mI =
-    iBase < minMIBase
-      ? minMIBase * mIRates[0] + addMI
-      : iBase * mIRates[0] + addMI;
-  const eI =
-    iBase < minEIBase
-      ? minEIBase * eIRates[0]
-      : maxEIBase && iBase > maxEIBase
-      ? maxEIBase * eIRates[0]
-      : iBase * eIRates[0];
-  const uI = iBase < minUIBase ? minUIBase * uIRates[0] : iBase * uIRates[0];
-  return +(
-    mI +
-    eI +
-    uI +
-    hACBase * hACRates[0] * Number(checkProvident)
-  ).toFixed(2);
+  const MI = nomarlizeNumber(IBase, MIBases) * MIRates[0] + addMI;
+  const EI = nomarlizeNumber(IBase, EIBases) * EIRates[0];
+  const UI = nomarlizeNumber(IBase, UIBases) * UIRates[0];
+  return +(MI + EI + UI + HACBase * HACRate * Number(checkProvident)).toFixed(
+    2
+  );
 }
 
 export function getBonusTax(bonus, forward = true) {

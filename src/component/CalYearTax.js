@@ -5,7 +5,11 @@ import {
   TextField,
   Button,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl
 } from '@material-ui/core';
 import { Place } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
@@ -21,6 +25,9 @@ const style = theme => ({
   },
   btnLabel: {
     justifyContent: 'flex-start'
+  },
+  formControl: {
+    marginLeft: theme.spacing.unit
   }
 });
 
@@ -45,10 +52,11 @@ class CalYearTax extends Component {
   state = {
     monthIncome: '',
     insurance: '',
-    iBase: '',
-    hACBase: '',
+    IBase: '',
+    HACBase: '',
     additional: '',
-    checkProvident: true
+    checkProvident: true,
+    HACRate: INSURANCE[this.props.cityIdx].HACRates[0]
   };
 
   handleClick = e => {
@@ -101,11 +109,17 @@ class CalYearTax extends Component {
 
   handleChange = name => event => {
     const { cityIdx } = this.props;
-    const { minIBase, maxIBase, minHACBase, maxHACBase } = INSURANCE[cityIdx];
+    const { IBases, HACBases } = INSURANCE[cityIdx];
     if (name === 'checkProvident') {
       const { checked } = event.target;
-      this.setState(({ iBase, hACBase }) => {
-        const insurance = getInsurance(iBase, hACBase, cityIdx, checked);
+      this.setState(({ IBase, HACBase, HACRate }) => {
+        const insurance = getInsurance(
+          IBase,
+          HACBase,
+          cityIdx,
+          checked,
+          HACRate
+        );
         return {
           checkProvident: checked,
           insurance
@@ -116,13 +130,19 @@ class CalYearTax extends Component {
     const { value } = event.target;
     this.setState({ [name]: value });
     if (name === 'monthIncome') {
-      this.setState(({ checkProvident }) => {
-        const iBase = nomarlizeNumber(value, minIBase, maxIBase);
-        const hACBase = nomarlizeNumber(value, minHACBase, maxHACBase);
-        const insurance = getInsurance(iBase, hACBase, cityIdx, checkProvident);
+      this.setState(({ checkProvident, HACRate }) => {
+        const IBase = nomarlizeNumber(value, IBases);
+        const HACBase = nomarlizeNumber(value, HACBases);
+        const insurance = getInsurance(
+          IBase,
+          HACBase,
+          cityIdx,
+          checkProvident,
+          HACRate
+        );
         return {
-          iBase,
-          hACBase,
+          IBase,
+          HACBase,
           insurance
         };
       });
@@ -131,18 +151,29 @@ class CalYearTax extends Component {
 
   handleBlur = name => event => {
     const { cityIdx } = this.props;
-    const { minIBase, maxIBase, minHACBase, maxHACBase } = INSURANCE[cityIdx];
-    if (name === 'iBase' || name === 'hACBase') {
+    const { IBases, HACBases } = INSURANCE[cityIdx];
+    if (name === 'IBase' || name === 'HACBase') {
       this.setState(state => {
         const _value = nomarlizeNumber(
           state[name],
-          name === 'iBase' ? minIBase : minHACBase,
-          name === 'iBase' ? maxIBase : maxHACBase
+          name === 'IBase' ? IBases : HACBases
         );
         const insurance =
-          name === 'iBase'
-            ? getInsurance(_value, state.hACBase, cityIdx, state.checkProvident)
-            : getInsurance(state.iBase, _value, cityIdx, state.checkProvident);
+          name === 'IBase'
+            ? getInsurance(
+                _value,
+                state.HACBase,
+                cityIdx,
+                state.checkProvident,
+                state.HACRate
+              )
+            : getInsurance(
+                state.IBase,
+                _value,
+                cityIdx,
+                state.checkProvident,
+                state.HACRate
+              );
         return {
           [name]: _value,
           insurance
@@ -151,19 +182,33 @@ class CalYearTax extends Component {
     }
   };
 
+  handleSlect = event => {
+    const r = +event.target.value;
+    this.setState(state => {
+      const insurance = getInsurance(
+        state.IBase,
+        state.HACBase,
+        this.props.cityIdx,
+        state.checkProvident,
+        r
+      );
+      return {
+        HACRate: r,
+        insurance
+      };
+    });
+  };
   render() {
     const { classes, cityIdx } = this.props;
     const {
       monthIncome,
       insurance,
-      iBase,
-      hACBase,
+      IBase,
+      HACBase,
       additional,
       checkProvident
     } = this.state;
-    const { city, minIBase, maxIBase, minHACBase, maxHACBase } = INSURANCE[
-      cityIdx
-    ];
+    const { city, IBases, HACBases } = INSURANCE[cityIdx];
     return (
       <Grid container spacing={24} justify="flex-end" component="form">
         <Grid item xs={12}>
@@ -203,30 +248,30 @@ class CalYearTax extends Component {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            id="iBase"
+            id="IBase"
             label="社保缴纳基数(元)"
-            value={iBase}
+            value={IBase}
             fullWidth
             helperText={
               <Text
                 classes={classes}
                 city={city}
                 label="社保缴纳基数范围："
-                value={`${minIBase}-${maxIBase}`}
+                value={`${IBases[0]}-${IBases[1]}`}
               />
             }
             type="number"
-            onChange={this.handleChange('iBase')}
-            onBlur={this.handleBlur('iBase')}
+            onChange={this.handleChange('IBase')}
+            onBlur={this.handleBlur('IBase')}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            id="hACBase"
+            id="HACBase"
             label="公积金缴纳基数(元)"
-            value={hACBase}
-            onChange={this.handleChange('hACBase')}
-            onBlur={this.handleBlur('hACBase')}
+            value={HACBase}
+            onChange={this.handleChange('HACBase')}
+            onBlur={this.handleBlur('HACBase')}
             fullWidth
             disabled={!checkProvident}
             helperText={
@@ -234,7 +279,7 @@ class CalYearTax extends Component {
                 classes={classes}
                 city={city}
                 label="公积金缴纳基数范围："
-                value={`${minHACBase}-${maxHACBase}`}
+                value={`${HACBases[0]}-${HACBases[1]}`}
               />
             }
             type="number"
@@ -263,6 +308,29 @@ class CalYearTax extends Component {
             }
             label="汇缴住房公积金"
           />
+          <FormControl
+            className={classes.formControl}
+            disabled={!checkProvident}
+          >
+            <InputLabel htmlFor="HACRate">比例</InputLabel>
+            <Select
+              value={this.state.HACRate}
+              onChange={this.handleSlect}
+              inputProps={{
+                name: 'HACRate',
+                id: 'HACRate'
+              }}
+            >
+              <MenuItem value={0.05}>5%</MenuItem>
+              <MenuItem value={0.06}>6%</MenuItem>
+              <MenuItem value={0.07}>7%</MenuItem>
+              <MenuItem value={0.08}>8%</MenuItem>
+              <MenuItem value={0.09}>9%</MenuItem>
+              <MenuItem value={0.1}>10%</MenuItem>
+              <MenuItem value={0.11}>11%</MenuItem>
+              <MenuItem value={0.12}>12%</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={12} md={4}>
           <Button
