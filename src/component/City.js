@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { Paper, Button, Typography, Grid } from '@material-ui/core';
 import { Place } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
-import { CITYS } from '../constant';
+import { CITYS, INSURANCE } from '../constant';
+import { getInsurance } from '../utils/tax';
+import normalizeNumber from '../utils/normalizeNumber';
 
 const styles = theme => ({
   root: {
@@ -30,12 +32,33 @@ const styles = theme => ({
 
 class City extends Component {
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    switchCity: PropTypes.func.isRequired,
+    writeInput: PropTypes.func.isRequired,
+    cityIdx: PropTypes.number.isRequired
   };
 
   handleClick = cityIdx => e => {
-    this.props.switchCity(cityIdx);
-    this.props.history.push('/');
+    const {
+      switchCity,
+      writeInput,
+      history,
+      monthIncome,
+      checkProvident
+    } = this.props;
+    const { IBases, HACBases, HACRates } = INSURANCE[cityIdx];
+    switchCity(cityIdx);
+    const IBase = normalizeNumber(monthIncome, IBases);
+    const HACBase = normalizeNumber(monthIncome, HACBases);
+    const insurance = getInsurance(
+      IBase,
+      HACBase,
+      cityIdx,
+      checkProvident,
+      HACRates[0]
+    );
+    writeInput({ HACRate: HACRates[0], insurance, IBase, HACBase });
+    history.push('/');
   };
 
   render() {

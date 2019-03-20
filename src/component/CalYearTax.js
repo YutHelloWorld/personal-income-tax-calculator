@@ -45,22 +45,23 @@ class CalYearTax extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     cityIdx: PropTypes.number.isRequired,
+    monthIncome: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
+    insurance: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
+    IBase: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    HACBase: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
+    additional: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
+    checkProvident: PropTypes.bool.isRequired,
     compute: PropTypes.func.isRequired,
-    switchType: PropTypes.func.isRequired
-  };
-
-  state = {
-    monthIncome: '',
-    insurance: '',
-    IBase: '',
-    HACBase: '',
-    additional: '',
-    checkProvident: true,
-    HACRate: INSURANCE[this.props.cityIdx].HACRates[0]
+    switchType: PropTypes.func.isRequired,
+    writeInput: PropTypes.func.isRequired
   };
 
   handleClick = e => {
-    const { monthIncome, insurance, additional } = this.state;
+    const { monthIncome, insurance, additional } = this.props;
     if (monthIncome && insurance) {
       e.preventDefault();
       const oTax = getIncomeTax(monthIncome, insurance, 12, +additional);
@@ -108,108 +109,92 @@ class CalYearTax extends Component {
   };
 
   handleChange = name => event => {
-    const { cityIdx } = this.props;
+    const {
+      cityIdx,
+      writeInput,
+      IBase,
+      HACBase,
+      HACRate,
+      checkProvident
+    } = this.props;
     const { IBases, HACBases } = INSURANCE[cityIdx];
-
+    let insurance;
     if (name === 'checkProvident') {
       const { checked } = event.target;
-      this.setState(({ IBase, HACBase, HACRate }) => {
-        const insurance = getInsurance(
-          IBase,
-          HACBase,
-          cityIdx,
-          checked,
-          HACRate
-        );
-        return {
-          checkProvident: checked,
-          insurance
-        };
-      });
+      insurance = getInsurance(IBase, HACBase, cityIdx, checked, HACRate);
+      writeInput({ checkProvident: checked, insurance });
       return;
     }
 
     const { value } = event.target;
-    this.setState({ [name]: value });
-
     if (name === 'monthIncome') {
-      this.setState(({ checkProvident, HACRate }) => {
-        const IBase = nomarlizeNumber(value, IBases);
-        const HACBase = nomarlizeNumber(value, HACBases);
-        const insurance = getInsurance(
-          IBase,
-          HACBase,
-          cityIdx,
-          checkProvident,
-          HACRate
-        );
-        return {
-          IBase,
-          HACBase,
-          insurance
-        };
+      const IBase = nomarlizeNumber(value, IBases);
+      const HACBase = nomarlizeNumber(value, HACBases);
+      insurance = getInsurance(
+        IBase,
+        HACBase,
+        cityIdx,
+        checkProvident,
+        HACRate
+      );
+
+      writeInput({
+        IBase,
+        HACBase,
+        insurance,
+        [name]: value
       });
+      return;
     }
 
     if (name === 'HACRate') {
-      this.setState(({ IBase, HACBase, checkProvident }) => {
-        const insurance = getInsurance(
-          IBase,
-          HACBase,
-          cityIdx,
-          checkProvident,
-          value
-        );
-        return {
-          insurance
-        };
+      insurance = getInsurance(IBase, HACBase, cityIdx, checkProvident, value);
+      writeInput({
+        insurance,
+        [name]: value
       });
+      return;
     }
+    writeInput({ [name]: value });
   };
 
   handleBlur = name => event => {
-    const { cityIdx } = this.props;
+    const {
+      cityIdx,
+      HACBase,
+      checkProvident,
+      HACRate,
+      IBase,
+      writeInput
+    } = this.props;
     const { IBases, HACBases } = INSURANCE[cityIdx];
-    if (name === 'IBase' || name === 'HACBase') {
-      this.setState(state => {
-        const _value = nomarlizeNumber(
-          state[name],
-          name === 'IBase' ? IBases : HACBases
-        );
-        const insurance =
-          name === 'IBase'
-            ? getInsurance(
-                _value,
-                state.HACBase,
-                cityIdx,
-                state.checkProvident,
-                state.HACRate
-              )
-            : getInsurance(
-                state.IBase,
-                _value,
-                cityIdx,
-                state.checkProvident,
-                state.HACRate
-              );
-        return {
-          [name]: _value,
-          insurance
-        };
-      });
-    }
+
+    const _value = nomarlizeNumber(
+      this.props[name],
+      name === 'IBase' ? IBases : HACBases
+    );
+    const insurance =
+      name === 'IBase'
+        ? getInsurance(_value, HACBase, cityIdx, checkProvident, HACRate)
+        : getInsurance(IBase, _value, cityIdx, checkProvident, HACRate);
+    writeInput({
+      [name]: _value,
+      insurance
+    });
   };
 
   render() {
-    const { classes, cityIdx } = this.props;
     const {
+      classes,
+      cityIdx,
       monthIncome,
       insurance,
       IBase,
       HACBase,
       additional,
-      checkProvident
-    } = this.state;
+      checkProvident,
+      HACRate
+    } = this.props;
     const { city, IBases, HACBases } = INSURANCE[cityIdx];
     return (
       <Grid container spacing={24} justify="flex-end" component="form">
@@ -293,7 +278,7 @@ class CalYearTax extends Component {
             label="专项附加扣除(元/月)"
             value={additional}
             onChange={this.handleChange('additional')}
-            onBlur={this.handleBlur('additional')}
+            // onBlur={this.handleBlur('additional')}
             fullWidth
             type="number"
             helperText="*专项附加扣除请在个人所得税APP中申报查看"
@@ -316,7 +301,7 @@ class CalYearTax extends Component {
           >
             <InputLabel htmlFor="HACRate">比例</InputLabel>
             <Select
-              value={this.state.HACRate}
+              value={HACRate}
               onChange={this.handleChange('HACRate')}
               inputProps={{
                 name: 'HACRate',

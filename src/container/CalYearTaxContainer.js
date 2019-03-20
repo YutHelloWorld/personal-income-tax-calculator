@@ -2,14 +2,16 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CalYearTax from '../component/CalYearTax';
 import { computeWithCb, switchTypeWithCb } from '../store/result';
+import { writeInput } from '../store/input';
 
 const mapStateToProps = state => ({
-  cityIdx: state.cityIdx
+  ...state.input
 });
 
 const mapDispatchToProps = {
   compute: computeWithCb,
-  switchType: switchTypeWithCb
+  switchType: switchTypeWithCb,
+  writeInput
 };
 
 export default withRouter(

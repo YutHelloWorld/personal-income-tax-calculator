@@ -1,8 +1,10 @@
+import { INSURANCE } from '../constant';
 /**
 |--------------------------------------------------
 | Constants
 |--------------------------------------------------
 */
+const WRITE_INPUT = 'WRITE_INPUT';
 const SWITCH_CITY = 'SWITCH_CITY';
 
 /**
@@ -10,7 +12,12 @@ const SWITCH_CITY = 'SWITCH_CITY';
 | Actions
 |--------------------------------------------------
 */
-export const switchCity = city => ({
+export const writeInput = payload => ({
+  type: WRITE_INPUT,
+  payload
+});
+
+const switchCity = city => ({
   type: SWITCH_CITY,
   payload: city
 });
@@ -27,9 +34,9 @@ export const switchCityWithCb = city => {
 | Action Handlers
 |--------------------------------------------------
 */
-
 const ACTION_HANDLERS = {
-  [SWITCH_CITY]: (state, action) => action.payload
+  [WRITE_INPUT]: (state, action) => ({ ...state, ...action.payload }),
+  [SWITCH_CITY]: (state, action) => ({ ...state, cityIdx: action.payload })
 };
 
 /**
@@ -37,7 +44,17 @@ const ACTION_HANDLERS = {
 | Reducer
 |--------------------------------------------------
 */
-const initialState = +localStorage.getItem('cityIdx') || 0;
+const cityIdx = +localStorage.getItem('cityIdx') || 0;
+const initialState = {
+  monthIncome: '',
+  insurance: '',
+  IBase: '',
+  HACBase: '',
+  additional: '',
+  checkProvident: true,
+  HACRate: INSURANCE[cityIdx].HACRates[0],
+  cityIdx
+};
 
 export default function(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];

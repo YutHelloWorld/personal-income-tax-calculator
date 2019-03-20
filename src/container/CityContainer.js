@@ -1,13 +1,14 @@
 import { connect } from 'react-redux';
-import { switchCityWithCb } from '../store/city';
+import { writeInput, switchCityWithCb } from '../store/input';
 import City from '../component/City';
 
 const mapStateToProps = state => ({
-  cityIdx: state.cityIdx
+  ...state.input
 });
 
 const mapDispatchToProps = {
-  switchCity: switchCityWithCb
+  switchCity: switchCityWithCb,
+  writeInput
 };
 
 export default connect(
