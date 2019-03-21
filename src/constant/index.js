@@ -93,6 +93,19 @@ export const INSURANCE = [
     CIRates: [0, 0.01]
   },
   {
+    city: '广州',
+    IBases: [2100, 24654], // 社保基数
+    MIBases: [4931, 24654], // 医保基数
+    EIBases: [3469, 20004], // 养老基数
+    UIBases: [2100, 24654], // 失业险基数
+    HACBases: [2100, 24654], // 公积金基数
+    addMI: 0, // 大病
+    HACRates: [0.07, 0.07],
+    EIRates: [0.08, 0.14],
+    MIRates: [0.02, 0.07],
+    UIRates: [0.002, 0.0064]
+  },
+  {
     city: '深圳',
     IBases: [2200, 25044],
     MIBases: [5008.8, 25044],
@@ -184,6 +197,7 @@ export const CITYS = [
   '北京',
   '杭州',
   '上海',
+  '广州',
   '深圳',
   '宁波',
   '苏州',
