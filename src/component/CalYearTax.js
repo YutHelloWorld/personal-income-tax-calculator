@@ -197,7 +197,13 @@ class CalYearTax extends Component {
     } = this.props;
     const { city, IBases, HACBases } = INSURANCE[cityIdx];
     return (
-      <Grid container spacing={24} justify="flex-end" component="form">
+      <Grid
+        container
+        spacing={24}
+        justify="flex-end"
+        component="form"
+        onSubmit={this.handleClick}
+      >
         <Grid item xs={12}>
           <Button
             size="small"
@@ -278,7 +284,6 @@ class CalYearTax extends Component {
             label="专项附加扣除(元/月)"
             value={additional}
             onChange={this.handleChange('additional')}
-            // onBlur={this.handleBlur('additional')}
             fullWidth
             type="number"
             helperText="*专项附加扣除请在个人所得税APP中申报查看"
@@ -320,13 +325,7 @@ class CalYearTax extends Component {
           </FormControl>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Button
-            variant="contained"
-            fullWidth
-            color="primary"
-            onClick={this.handleClick}
-            type="submit"
-          >
+          <Button variant="contained" fullWidth color="primary" type="submit">
             计算
           </Button>
         </Grid>
