@@ -223,6 +223,7 @@ class CalYearTax extends Component {
             label="月均工资收入(元)"
             fullWidth
             type="number"
+            step=".01"
             value={monthIncome}
             onChange={this.handleChange('monthIncome')}
           />
@@ -235,6 +236,7 @@ class CalYearTax extends Component {
             fullWidth
             helperText="*根据缴纳基数计算，可手动修改"
             type="number"
+            step=".01"
             value={insurance}
             onChange={this.handleChange('insurance')}
           />
@@ -244,6 +246,7 @@ class CalYearTax extends Component {
             id="IBase"
             label="社保缴纳基数(元)"
             value={IBase}
+            step=".01"
             fullWidth
             helperText={
               <Text
@@ -266,6 +269,7 @@ class CalYearTax extends Component {
             onChange={this.handleChange('HACBase')}
             onBlur={this.handleBlur('HACBase')}
             fullWidth
+            step=".01"
             disabled={!checkProvident}
             helperText={
               <Text
@@ -286,6 +290,7 @@ class CalYearTax extends Component {
             onChange={this.handleChange('additional')}
             fullWidth
             type="number"
+            step=".01"
             helperText="*专项附加扣除请在个人所得税APP中申报查看"
           />
         </Grid>

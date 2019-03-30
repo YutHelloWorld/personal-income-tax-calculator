@@ -74,6 +74,7 @@ class YearEndBonus extends Component {
             label={aModeText[mode]}
             fullWidth
             type="number"
+            step=".01"
             value={bonus}
             onChange={this.handleChange('bonus')}
           />
