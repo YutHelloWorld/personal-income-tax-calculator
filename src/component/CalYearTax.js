@@ -222,8 +222,7 @@ class CalYearTax extends Component {
             id="monthIncome"
             label="月均工资收入(元)"
             fullWidth
-            type="number"
-            step=".01"
+            type="tel"
             value={monthIncome}
             onChange={this.handleChange('monthIncome')}
           />
@@ -235,8 +234,7 @@ class CalYearTax extends Component {
             label="五险一金(元)"
             fullWidth
             helperText="*根据缴纳基数计算，可手动修改"
-            type="number"
-            step=".01"
+            type="tel"
             value={insurance}
             onChange={this.handleChange('insurance')}
           />
@@ -246,7 +244,6 @@ class CalYearTax extends Component {
             id="IBase"
             label="社保缴纳基数(元)"
             value={IBase}
-            step=".01"
             fullWidth
             helperText={
               <Text
@@ -256,7 +253,7 @@ class CalYearTax extends Component {
                 value={`${IBases[0]}-${IBases[1]}`}
               />
             }
-            type="number"
+            type="tel"
             onChange={this.handleChange('IBase')}
             onBlur={this.handleBlur('IBase')}
           />
@@ -269,7 +266,6 @@ class CalYearTax extends Component {
             onChange={this.handleChange('HACBase')}
             onBlur={this.handleBlur('HACBase')}
             fullWidth
-            step=".01"
             disabled={!checkProvident}
             helperText={
               <Text
@@ -279,7 +275,7 @@ class CalYearTax extends Component {
                 value={`${HACBases[0]}-${HACBases[1]}`}
               />
             }
-            type="number"
+            type="tel"
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -289,8 +285,7 @@ class CalYearTax extends Component {
             value={additional}
             onChange={this.handleChange('additional')}
             fullWidth
-            type="number"
-            step=".01"
+            type="tel"
             helperText="*专项附加扣除请在个人所得税APP中申报查看"
           />
         </Grid>
