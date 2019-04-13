@@ -65,7 +65,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "GENERATE_SOURCEMAP=false node scripts/build.js",
     "test": "node scripts/test.js",
     "commit": "git-cz",
     "analyze": "npm run build && source-map-explorer 'build/static/js/*.js'"
