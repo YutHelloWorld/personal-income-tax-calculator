@@ -17,7 +17,7 @@ import orange from '@material-ui/core/colors/orange';
 import { Link } from 'react-router-dom';
 import nomarlizeNumber from '../utils/normalizeNumber';
 import { getIncomeTax, getInsurance } from '../utils/tax';
-import { INSURANCE } from '../constant';
+import { INSURANCE, HAC_RATE } from '../constant';
 
 const style = theme => ({
   span: {
@@ -313,14 +313,11 @@ class CalYearTax extends Component {
                 id: 'HACRate'
               }}
             >
-              <MenuItem value={0.05}>5%</MenuItem>
-              <MenuItem value={0.06}>6%</MenuItem>
-              <MenuItem value={0.07}>7%</MenuItem>
-              <MenuItem value={0.08}>8%</MenuItem>
-              <MenuItem value={0.09}>9%</MenuItem>
-              <MenuItem value={0.1}>10%</MenuItem>
-              <MenuItem value={0.11}>11%</MenuItem>
-              <MenuItem value={0.12}>12%</MenuItem>
+              {HAC_RATE.map(i => (
+                <MenuItem value={i[0]} key={i[1]}>
+                  {i[1]}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>

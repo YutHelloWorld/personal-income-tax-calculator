@@ -32,6 +32,16 @@ export const MONTH_RANGE = [
   createData(0, 80, 45, 15160)
 ];
 
+export const HAC_RATE = [
+  [0.05, '5%'],
+  [0.06, '6%'],
+  [0.07, '7%'],
+  [0.08, '8%'],
+  [0.09, '9%'],
+  [0.1, '10%'],
+  [0.11, '11%'],
+  [0.12, '12%']
+];
 /**
  *  endowment insurance（养老保险) EI
  *  medical insurance（医疗保险） MI
