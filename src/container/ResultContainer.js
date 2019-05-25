@@ -3,7 +3,9 @@ import Result from '../component/Result';
 
 const mapStateToProps = state => ({
   result: state.calc.result,
-  type: state.calc.type
+  type: state.calc.type,
+  mode: state.input.mode,
+  month: state.monthInput.month
 });
 
 const mapDispatchToProps = {};

@@ -9,7 +9,8 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  FormControl
+  FormControl,
+  Switch
 } from '@material-ui/core';
 import { Place } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
@@ -108,25 +109,147 @@ class CalYearTax extends Component {
     }
   };
 
+  handleMonthCal = e => {
+    const {
+      monthInput: { month, data },
+      compute
+    } = this.props;
+    const { monthIncome, insurance, additional } = data[month];
+    let aMonthTax = [];
+    if (!month) {
+      const oTax = getIncomeTax(monthIncome, insurance, 1, +additional);
+      const { tax, income, afterTax } = oTax;
+      aMonthTax = [{ tax, income, afterTax }];
+      compute({
+        ...oTax,
+        aMonthTax,
+        insurance,
+        additional
+      });
+      return;
+    }
+    let _income = 0,
+      _insurance = 0,
+      _additional = 0;
+    data.some((el, i) => {
+      if (i === month + 1) {
+        return true;
+      }
+      _income += +el.monthIncome;
+      _insurance += +el.insurance;
+      _additional += +el.additional;
+      return false;
+    });
+
+    for (let j = 0; j < month + 1; j++) {
+      if (j === 0) {
+        const oTax = getIncomeTax(
+          data[0].monthIncome,
+          data[0].insurance,
+          1,
+          +data[0].additional
+        );
+        const { tax, income, afterTax, totalInsurance } = oTax;
+        aMonthTax.push({ tax, income, afterTax, insurance: totalInsurance });
+        continue;
+      }
+      let m = 0,
+        o = 0,
+        n = 0,
+        _m = 0,
+        _o = 0,
+        _n = 0;
+      data.some((el, i) => {
+        if (i === j + 1) {
+          return true;
+        }
+        m += +el.monthIncome;
+        o += +el.insurance;
+        n += +el.additional;
+        return false;
+      });
+
+      data.some((el, i) => {
+        if (i === j) {
+          return true;
+        }
+        _m += +el.monthIncome;
+        _o += +el.insurance;
+        _n += +el.additional;
+        return false;
+      });
+      const next = getIncomeTax(m, o, 1, n, 5000 * (j + 1));
+      const prev = getIncomeTax(_m, _o, 1, _n, 5000 * j);
+      const tax = +data[j].monthIncome ? +(next.tax - prev.tax).toFixed(2) : 0;
+      const income = +data[j].monthIncome;
+      const afterTax = +(income - tax - +data[j].insurance).toFixed(2);
+      aMonthTax.push({ tax, income, afterTax, insurance: data[j].insurance });
+    }
+
+    const current = getIncomeTax(
+      _income,
+      _insurance,
+      1,
+      _additional,
+      5000 * (month + 1)
+    );
+
+    compute({
+      ...current,
+      aMonthTax,
+      insurance: _insurance,
+      additional: _additional
+    });
+    this.props.history.push('/result');
+    this.props.switchType(1);
+  };
+
   handleChange = name => event => {
     const {
       cityIdx,
       writeInput,
+      writeMonthInput,
+      selectMonth,
       IBase,
       HACBase,
       HACRate,
-      checkProvident
+      checkProvident,
+      mode,
+      monthInput: { month, data }
     } = this.props;
+    const { IBase: iB, HACBase: hB, checkProvident: cP, HACRate: hR } = data[
+      month
+    ];
     const { IBases, HACBases } = INSURANCE[cityIdx];
     let insurance;
     if (name === 'checkProvident') {
       const { checked } = event.target;
-      insurance = getInsurance(IBase, HACBase, cityIdx, checked, HACRate);
-      writeInput({ checkProvident: checked, insurance });
+      insurance = getInsurance(
+        mode ? iB : IBase,
+        mode ? hB : HACBase,
+        cityIdx,
+        checked,
+        mode ? hR : HACRate
+      );
+      mode
+        ? writeMonthInput({
+            checkProvident: checked,
+            insurance
+          })
+        : writeInput({ checkProvident: checked, insurance });
       return;
     }
 
+    if (name === 'mode') {
+      const { checked } = event.target;
+      writeInput({ [name]: checked });
+      return;
+    }
     const { value } = event.target;
+    if (name === 'month') {
+      selectMonth(value);
+      return;
+    }
     if (name === 'monthIncome') {
       const IBase = nomarlizeNumber(value, IBases);
       const HACBase = nomarlizeNumber(value, HACBases);
@@ -138,24 +261,43 @@ class CalYearTax extends Component {
         HACRate
       );
 
-      writeInput({
-        IBase,
-        HACBase,
-        insurance,
-        [name]: value
-      });
+      mode
+        ? writeMonthInput({
+            IBase,
+            HACBase,
+            insurance,
+            [name]: value
+          })
+        : writeInput({
+            IBase,
+            HACBase,
+            insurance,
+            [name]: value
+          });
+
       return;
     }
 
     if (name === 'HACRate') {
-      insurance = getInsurance(IBase, HACBase, cityIdx, checkProvident, value);
-      writeInput({
-        insurance,
-        [name]: value
-      });
+      insurance = getInsurance(
+        mode ? iB : IBase,
+        mode ? hB : HACBase,
+        cityIdx,
+        mode ? cP : checkProvident,
+        value
+      );
+      mode
+        ? writeMonthInput({
+            insurance,
+            [name]: value
+          })
+        : writeInput({
+            insurance,
+            [name]: value
+          });
       return;
     }
-    writeInput({ [name]: value });
+    mode ? writeMonthInput({ [name]: value }) : writeInput({ [name]: value });
   };
 
   handleBlur = name => event => {
@@ -165,27 +307,47 @@ class CalYearTax extends Component {
       checkProvident,
       HACRate,
       IBase,
-      writeInput
+      writeInput,
+      writeMonthInput,
+      mode,
+      monthInput: { month, data }
     } = this.props;
     const { IBases, HACBases } = INSURANCE[cityIdx];
-
+    const { IBase: iB, HACBase: hB, checkProvident: cP, HACRate: hR } = data[
+      month
+    ];
     const _value = nomarlizeNumber(
-      this.props[name],
+      mode ? (name === 'IBase' ? iB : hB) : this.props[name],
       name === 'IBase' ? IBases : HACBases
     );
     const insurance =
       name === 'IBase'
-        ? getInsurance(_value, HACBase, cityIdx, checkProvident, HACRate)
-        : getInsurance(IBase, _value, cityIdx, checkProvident, HACRate);
-    writeInput({
-      [name]: _value,
-      insurance
-    });
+        ? getInsurance(
+            _value,
+            mode ? hB : HACBase,
+            cityIdx,
+            mode ? cP : checkProvident,
+            mode ? hR : HACRate
+          )
+        : getInsurance(
+            mode ? iB : IBase,
+            _value,
+            cityIdx,
+            mode ? cP : checkProvident,
+            mode ? hR : HACRate
+          );
+    mode
+      ? writeMonthInput({ [name]: _value, insurance })
+      : writeInput({
+          [name]: _value,
+          insurance
+        });
   };
 
   render() {
     const {
       classes,
+      mode,
       cityIdx,
       monthIncome,
       insurance,
@@ -193,14 +355,26 @@ class CalYearTax extends Component {
       HACBase,
       additional,
       checkProvident,
-      HACRate
+      HACRate,
+      monthInput: { month, data },
+      nextMonth,
+      copy
     } = this.props;
+    const {
+      monthIncome: mI,
+      insurance: iS,
+      IBase: iB,
+      HACBase: hB,
+      checkProvident: cP,
+      HACRate: hR,
+      additional: ad
+    } = data[month];
     const { city, IBases, HACBases } = INSURANCE[cityIdx];
     return (
       <Grid
         container
         spacing={24}
-        justify="flex-end"
+        // justify="flex-end"
         component="form"
         onSubmit={this.handleClick}
       >
@@ -217,13 +391,47 @@ class CalYearTax extends Component {
           </Button>
         </Grid>
         <Grid item xs={12} md={6}>
+          <FormControlLabel
+            control={
+              <Switch
+                color="primary"
+                checked={mode}
+                onChange={this.handleChange('mode')}
+              />
+            }
+            label="月度模式"
+            labelPlacement="start"
+          />
+        </Grid>
+        {mode && (
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="month">选择月份</InputLabel>
+              <Select
+                inputProps={{
+                  name: 'month',
+                  id: 'month'
+                }}
+                value={month}
+                onChange={this.handleChange('month')}
+              >
+                {new Array(12).fill('').map((el, i) => (
+                  <MenuItem value={i} key={i}>
+                    {`${i + 1}月`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
+        <Grid item xs={12} md={6}>
           <TextField
             required
             id="monthIncome"
-            label="月均工资收入(元)"
+            label="月收入(元)"
             fullWidth
             type="tel"
-            value={monthIncome}
+            value={mode ? mI : monthIncome}
             onChange={this.handleChange('monthIncome')}
           />
         </Grid>
@@ -235,7 +443,7 @@ class CalYearTax extends Component {
             fullWidth
             helperText="*根据缴纳基数计算，可手动修改"
             type="tel"
-            value={insurance}
+            value={mode ? iS : insurance}
             onChange={this.handleChange('insurance')}
           />
         </Grid>
@@ -243,7 +451,7 @@ class CalYearTax extends Component {
           <TextField
             id="IBase"
             label="社保缴纳基数(元)"
-            value={IBase}
+            value={mode ? iB : IBase}
             fullWidth
             helperText={
               <Text
@@ -262,11 +470,11 @@ class CalYearTax extends Component {
           <TextField
             id="HACBase"
             label="公积金缴纳基数(元)"
-            value={HACBase}
+            value={mode ? hB : HACBase}
             onChange={this.handleChange('HACBase')}
             onBlur={this.handleBlur('HACBase')}
             fullWidth
-            disabled={!checkProvident}
+            disabled={mode ? !cP : !checkProvident}
             helperText={
               <Text
                 classes={classes}
@@ -282,7 +490,7 @@ class CalYearTax extends Component {
           <TextField
             id="additional"
             label="专项附加扣除(元/月)"
-            value={additional}
+            value={mode ? ad : additional}
             onChange={this.handleChange('additional')}
             fullWidth
             type="tel"
@@ -294,7 +502,7 @@ class CalYearTax extends Component {
             control={
               <Checkbox
                 value="checkProvident"
-                checked={checkProvident}
+                checked={mode ? cP : checkProvident}
                 onChange={this.handleChange('checkProvident')}
               />
             }
@@ -306,7 +514,7 @@ class CalYearTax extends Component {
           >
             <InputLabel htmlFor="HACRate">比例</InputLabel>
             <Select
-              value={HACRate}
+              value={mode ? hR : HACRate}
               onChange={this.handleChange('HACRate')}
               inputProps={{
                 name: 'HACRate',
@@ -321,11 +529,47 @@ class CalYearTax extends Component {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={4}>
-          <Button variant="contained" fullWidth color="primary" type="submit">
-            计算
-          </Button>
-        </Grid>
+        {mode && (
+          <>
+            {!!month && (
+              <Grid item xs={12} md={4}>
+                <Button variant="contained" fullWidth onClick={copy}>
+                  复制上月数据
+                </Button>
+              </Grid>
+            )}
+            {month !== 11 && (
+              <Grid item xs={12} md={4}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="secondary"
+                  onClick={nextMonth}
+                >
+                  下个月
+                </Button>
+              </Grid>
+            )}
+
+            <Grid item xs={12} md={4}>
+              <Button
+                variant="contained"
+                fullWidth
+                color="primary"
+                onClick={this.handleMonthCal}
+              >
+                查看本月个税
+              </Button>
+            </Grid>
+          </>
+        )}
+        {!mode && (
+          <Grid item xs={12} md={4}>
+            <Button variant="contained" fullWidth color="primary" type="submit">
+              计算
+            </Button>
+          </Grid>
+        )}
       </Grid>
     );
   }

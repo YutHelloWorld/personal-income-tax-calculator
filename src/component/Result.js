@@ -121,7 +121,7 @@ class Result extends Component {
   };
 
   render() {
-    const { classes, fullScreen, type, result } = this.props;
+    const { classes, fullScreen, type, result, mode, month } = this.props;
     const data = type === 1 ? RANGE : MONTH_RANGE;
     return (
       <main className={classes.root}>
@@ -143,13 +143,21 @@ class Result extends Component {
           >
             <Grid item>
               <Typography variant="caption" gutterBottom>
-                {type === 1 ? '年度税前(元)' : '税前收入(元)'}
+                {type === 1
+                  ? mode
+                    ? '累计税前(元)'
+                    : '年度税前(元)'
+                  : '税前收入(元)'}
               </Typography>
               <Typography variant="subtitle2">{result.income}</Typography>
             </Grid>
             <Grid item>
               <Typography variant="caption" gutterBottom>
-                {type === 1 ? '年度个税(元)' : '应纳个税(元)'}
+                {type === 1
+                  ? mode
+                    ? '累计个税(元)'
+                    : '年度个税(元)'
+                  : '应纳个税(元)'}
               </Typography>
               <Typography variant="subtitle2" color="secondary">
                 {result.tax}
@@ -157,7 +165,11 @@ class Result extends Component {
             </Grid>
             <Grid item>
               <Typography variant="caption" gutterBottom>
-                {type === 1 ? '年度税后(元)' : '税后收入(元)'}
+                {type === 1
+                  ? mode
+                    ? '累计税后'
+                    : '年度税后(元)'
+                  : '税后收入(元)'}
               </Typography>
               <Typography variant="subtitle2" color="primary">
                 {result.afterTax}
@@ -177,7 +189,7 @@ class Result extends Component {
                       </Typography>
                     }
                   />
-                  <Typography>60000</Typography>
+                  <Typography>{mode ? (month + 1) * 5000 : 60000}</Typography>
                 </ListItem>
                 <ListItem className={classes.listItem}>
                   <ListItemText
@@ -230,7 +242,9 @@ class Result extends Component {
                     <CustomTableCell>{`${idx + 1}月`}</CustomTableCell>
                     <CustomTableCell>{row.income}</CustomTableCell>
                     <CustomTableCell>{row.tax}</CustomTableCell>
-                    <CustomTableCell>{result.insurance}</CustomTableCell>
+                    <CustomTableCell>
+                      {mode ? row.insurance : result.insurance}
+                    </CustomTableCell>
                     <CustomTableCell>{row.afterTax}</CustomTableCell>
                   </TableRow>
                 ))}

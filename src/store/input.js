@@ -29,6 +29,12 @@ export const switchCityWithCb = city => {
   };
 };
 
+export const writeInputWithCb = payload => {
+  return (dispatch, getState) => {
+    dispatch(writeInput(payload));
+    localStorage.setItem('mode', getState().input.mode);
+  };
+};
 /**
 |--------------------------------------------------
 | Action Handlers
@@ -45,6 +51,7 @@ const ACTION_HANDLERS = {
 |--------------------------------------------------
 */
 const cityIdx = +localStorage.getItem('cityIdx') || 0;
+const mode = localStorage.getItem('mode') === 'true' || false;
 const initialState = {
   monthIncome: '',
   insurance: '',
@@ -53,7 +60,8 @@ const initialState = {
   additional: '',
   checkProvident: true,
   HACRate: INSURANCE[cityIdx].HACRates[0],
-  cityIdx
+  cityIdx,
+  mode
 };
 
 export default function(state = initialState, action) {
