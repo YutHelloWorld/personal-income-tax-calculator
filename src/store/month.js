@@ -1,4 +1,4 @@
-import update, { updateChain } from 'immutability-helper-x';
+import update from 'immutability-helper-x';
 import { INSURANCE } from '../constant';
 /**
 |--------------------------------------------------
