@@ -126,6 +126,8 @@ class CalYearTax extends Component {
         insurance,
         additional
       });
+      this.props.history.push('/result');
+      this.props.switchType(1);
       return;
     }
     let _income = 0,
