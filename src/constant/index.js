@@ -53,16 +53,16 @@ export const HAC_RATE = [
 export const INSURANCE = [
   {
     city: '北京',
-    IBases: [3387, 25401],
-    MIBases: [5080, 25401],
-    EIBases: [3387, 25401],
-    UIBases: [3387, 25401],
-    CIBase: [5080, 25401],
-    WIIBase: [5080, 25401],
-    HACBases: [2409, 25401],
+    IBases: [3613, 27786],
+    MIBases: [5557, 27786],
+    EIBases: [3613, 23565],
+    UIBases: [3613, 23565],
+    CIBase: [5557, 27786],
+    WIIBase: [4713, 23565],
+    HACBases: [2200, 27786],
     addMI: 3, // 大病
     HACRates: [0.12, 0.12],
-    EIRates: [0.08, 0.19],
+    EIRates: [0.08, 0.16],
     MIRates: [0.02, 0.1],
     UIRates: [0.002, 0.008],
     WIIRates: [0, 0.004],
@@ -104,26 +104,26 @@ export const INSURANCE = [
   },
   {
     city: '广州',
-    IBases: [2100, 24654], // 社保基数
-    MIBases: [4931, 24654], // 医保基数
-    EIBases: [3469, 20004], // 养老基数
-    UIBases: [2100, 24654], // 失业险基数
-    HACBases: [2100, 24654], // 公积金基数
+    IBases: [2100, 27960], // 社保基数
+    MIBases: [5592, 27960], // 医保基数
+    EIBases: [3803, 19014], // 养老基数
+    UIBases: [2100, 27960], // 失业险基数
+    HACBases: [2100, 27960], // 公积金基数
     addMI: 0, // 大病
     HACRates: [0.07, 0.07],
     EIRates: [0.08, 0.14],
-    MIRates: [0.02, 0.07],
+    MIRates: [0.02, 0.055],
     UIRates: [0.002, 0.0064]
   },
   {
     city: '深圳',
-    IBases: [2200, 25044],
-    MIBases: [5008.8, 25044],
-    EIBases: [2200, 25044],
+    IBases: [2200, 27927],
+    MIBases: [5585, 27927],
+    EIBases: [2200, 19014],
     UIBases: [2200, 2200],
-    CIBase: [2200, 25044],
-    WIIBase: [2200, 25044],
-    HACBases: [2130, 25044],
+    CIBase: [2200, 27927],
+    WIIBase: [2200, 19014],
+    HACBases: [2200, 27927],
     addMI: 0, // 大病
     HACRates: [0.05, 0.05],
     EIRates: [0.08, 0.14],
@@ -134,41 +134,41 @@ export const INSURANCE = [
   },
   {
     city: '宁波',
-    IBases: [3279, 16394], // 社保基数
-    MIBases: [3279, 16394], // 医保基数
-    EIBases: [3279, 16394], // 养老基数
-    UIBases: [3279, 16394], // 失业险基数
-    CIBase: [3279, 16394], // 生育险基数
-    WIIBase: [3279, 16394], // 工伤险基数
-    HACBases: [2010, 24420], // 公积金基数
+    IBases: [3539, 17694], // 社保基数
+    MIBases: [3539, 17694], // 医保基数
+    EIBases: [3539, 17694], // 养老基数
+    UIBases: [3539, 17694], // 失业险基数
+    CIBase: [3539, 17694], // 生育险基数
+    WIIBase: [3539, 17694], // 工伤险基数
+    HACBases: [2010, 27237], // 公积金基数
     addMI: 0, // 大病
     HACRates: [0.08, 0.08],
     EIRates: [0.08, 0.14],
-    MIRates: [0.02, 0.09],
+    MIRates: [0.02, 0.08],
     UIRates: [0.005, 0.005],
     WIIRates: [0, 0.0014],
-    CIRates: [0, 0.007]
+    CIRates: [0, 0.0067]
   },
   {
     city: '苏州',
-    IBases: [3030, 21963], // 社保基数
-    MIBases: [3030, 21963], // 医保基数
-    EIBases: [3030, 21963], // 养老基数
-    UIBases: [3030, 21963], // 失业险基数
-    HACBases: [3030, 21900], // 公积金基数
+    IBases: [3368, 16842], // 社保基数
+    MIBases: [3368, 16842], // 医保基数
+    EIBases: [3368, 16842], // 养老基数
+    UIBases: [3368, 16842], // 失业险基数
+    HACBases: [3030, 23700], // 公积金基数
     addMI: 5, // 大病
     HACRates: [0.08, 0.08],
-    EIRates: [0.08, 0.19],
-    MIRates: [0.02, 0.09],
+    EIRates: [0.08, 0.16],
+    MIRates: [0.02, 0.07],
     UIRates: [0.005, 0.005]
   },
   {
     city: '无锡',
-    IBases: [3030, 19935], // 社保基数
-    MIBases: [3030, 19935], // 医保基数
-    EIBases: [3030, 19935], // 养老基数
-    UIBases: [3030, 19935], // 失业险基数
-    HACBases: [1890, 21250], // 公积金基数
+    IBases: [2788, 18171], // 社保基数
+    MIBases: [2788, 18171], // 医保基数
+    EIBases: [2788, 18171], // 养老基数
+    UIBases: [2788, 18171], // 失业险基数
+    HACBases: [2020, 23100], // 公积金基数
     addMI: 0, // 大病
     HACRates: [0.08, 0.08],
     EIRates: [0.08, 0.19],
@@ -177,27 +177,27 @@ export const INSURANCE = [
   },
   {
     city: '西安',
-    IBases: [3371, 19443], // 社保基数
-    MIBases: [3889, 19443], // 医保基数
-    EIBases: [3371, 16857], // 养老基数
-    UIBases: [3889, 19443], // 失业险基数
-    HACBases: [1680, 19443], // 公积金基数
+    IBases: [3121, 20955], // 社保基数
+    MIBases: [4191, 20955], // 医保基数
+    EIBases: [3121, 15603], // 养老基数
+    UIBases: [4191, 20955], // 失业险基数
+    HACBases: [1800, 20955], // 公积金基数
     addMI: 1.6, // 大病
     HACRates: [0.1, 0.1],
-    EIRates: [0.08, 0.19],
-    MIRates: [0.02, 0.079],
+    EIRates: [0.08, 0.16],
+    MIRates: [0.02, 0.07],
     UIRates: [0.003, 0.007]
   },
   {
     city: '成都',
-    IBases: [2338, 17908], // 社保基数
-    MIBases: [3255, 16274], // 医保基数
-    EIBases: [2388, 17908], // 养老基数
-    UIBases: [3255, 16274], // 失业险基数
-    HACBases: [1500, 22302], // 公积金基数
+    IBases: [2697, 16179], // 社保基数
+    MIBases: [3236, 16179], // 医保基数
+    EIBases: [2697, 16179], // 养老基数
+    UIBases: [3236, 16179], // 失业险基数
+    HACBases: [1780, 21498], // 公积金基数
     addMI: 0, // 大病
     HACRates: [0.06, 0.06],
-    EIRates: [0.08, 0.19],
+    EIRates: [0.08, 0.16],
     MIRates: [0.02, 0.065],
     UIRates: [0.004, 0.006]
   }
