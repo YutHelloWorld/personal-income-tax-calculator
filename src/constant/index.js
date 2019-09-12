@@ -200,6 +200,19 @@ export const INSURANCE = [
     EIRates: [0.08, 0.16],
     MIRates: [0.02, 0.065],
     UIRates: [0.004, 0.006]
+  },
+  {
+    city: '南京',
+    IBases: [3368, 16842], // 社保基数
+    MIBases: [3368, 16842], // 医保基数
+    EIBases: [3368, 16842], // 养老基数
+    UIBases: [3368, 16842], // 失业险基数
+    HACBases: [2020, 27700], // 公积金基数
+    addMI: 0, // 大病
+    HACRates: [0.06, 0.06],
+    EIRates: [0.08, 0.16],
+    MIRates: [0.02, 0.09],
+    UIRates: [0.005, 0.005]
   }
 ];
 
@@ -213,5 +226,6 @@ export const CITYS = [
   '苏州',
   '无锡',
   '西安',
-  '成都'
+  '成都',
+  '南京'
 ];
