@@ -16,7 +16,7 @@ import { Place } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
 import { Link } from 'react-router-dom';
-import nomarlizeNumber from '../utils/normalizeNumber';
+import normalizedNumber from '../utils/normalizedNumber';
 import { getIncomeTax, getInsurance } from '../utils/tax';
 import { INSURANCE, HAC_RATE } from '../constant';
 
@@ -253,8 +253,8 @@ class CalYearTax extends Component {
       return;
     }
     if (name === 'monthIncome') {
-      const IBase = nomarlizeNumber(value, IBases);
-      const HACBase = nomarlizeNumber(value, HACBases);
+      const IBase = normalizedNumber(value, IBases);
+      const HACBase = normalizedNumber(value, HACBases);
       insurance = getInsurance(
         IBase,
         HACBase,
@@ -318,7 +318,7 @@ class CalYearTax extends Component {
     const { IBase: iB, HACBase: hB, checkProvident: cP, HACRate: hR } = data[
       month
     ];
-    const _value = nomarlizeNumber(
+    const _value = normalizedNumber(
       mode ? (name === 'IBase' ? iB : hB) : this.props[name],
       name === 'IBase' ? IBases : HACBases
     );

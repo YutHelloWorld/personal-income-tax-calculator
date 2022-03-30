@@ -1,6 +1,6 @@
 import find from './find';
 import { INSURANCE } from '../constant';
-import nomarlizeNumber from './normalizeNumber';
+import normalizedNumber from './normalizedNumber';
 
 export function getIncomeTax(
   income,
@@ -52,9 +52,9 @@ export function getInsurance(
     UIRates,
     addMI
   } = INSURANCE[index];
-  const MI = nomarlizeNumber(IBase, MIBases) * MIRates[0] + addMI;
-  const EI = nomarlizeNumber(IBase, EIBases) * EIRates[0];
-  const UI = nomarlizeNumber(IBase, UIBases) * UIRates[0];
+  const MI = normalizedNumber(IBase, MIBases) * MIRates[0] + addMI;
+  const EI = normalizedNumber(IBase, EIBases) * EIRates[0];
+  const UI = normalizedNumber(IBase, UIBases) * UIRates[0];
   return +(MI + EI + UI + HACBase * HACRate * Number(checkProvident)).toFixed(
     2
   );
