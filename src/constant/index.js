@@ -216,7 +216,7 @@ export const INSURANCE = [
   }
 ];
 
-export const CITYS = [
+export const CITY = [
   '北京',
   '杭州',
   '上海',

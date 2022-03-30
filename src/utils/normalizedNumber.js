@@ -1,4 +1,4 @@
-export default function nomarlizeNumber(value, interval) {
+export default function normalizedNumber(value, interval) {
   const _value = +value;
   const min = interval[0];
   const max = interval[1];

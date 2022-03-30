@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Paper, Button, Typography, Grid } from '@material-ui/core';
 import { Place } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
-import { CITYS, INSURANCE } from '../constant';
+import { CITY, INSURANCE } from '../constant';
 import { getInsurance } from '../utils/tax';
-import normalizeNumber from '../utils/normalizeNumber';
+import normalizedNumber from '../utils/normalizedNumber';
 
 const styles = theme => ({
   root: {
@@ -48,8 +48,8 @@ class City extends Component {
     } = this.props;
     const { IBases, HACBases, HACRates } = INSURANCE[cityIdx];
     switchCity(cityIdx);
-    const IBase = normalizeNumber(monthIncome, IBases);
-    const HACBase = normalizeNumber(monthIncome, HACBases);
+    const IBase = normalizedNumber(monthIncome, IBases);
+    const HACBase = normalizedNumber(monthIncome, HACBases);
     const insurance = getInsurance(
       IBase,
       HACBase,
@@ -70,7 +70,7 @@ class City extends Component {
             <Grid item xs={12}>
               <Typography className={classes.title}>热门城市</Typography>
             </Grid>
-            {CITYS.map((city, i) => (
+            {CITY.map((city, i) => (
               <Grid item key={i}>
                 <Button
                   size="small"
