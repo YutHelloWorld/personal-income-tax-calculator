@@ -53,18 +53,18 @@ export const HAC_RATE = [
 export const INSURANCE = [
   {
     city: '北京',
-    IBases: [5360, 28221],
-    MIBases: [5360, 28221],
-    EIBases: [5360, 28221],
-    UIBases: [5360, 28221],
-    CIBase: [5360, 28221],
-    WIIBase: [5360, 28221],
-    HACBases: [5360, 28221],
+    IBases: [5869, 31884],
+    MIBases: [5869, 31884],
+    EIBases: [5869, 31884],
+    UIBases: [5869, 31884],
+    CIBase: [5869, 31884],
+    WIIBase: [5869, 31884],
+    HACBases: [5869, 31884],
     addMI: 3, // 大病
     HACRates: [0.12, 0.12],
     EIRates: [0.08, 0.16],
     MIRates: [0.02, 0.1],
-    UIRates: [0.002, 0.008],
+    UIRates: [0.005, 0.005],
     WIIRates: [0, 0.004],
     CIRates: [0, 0.008]
   },
